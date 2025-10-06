@@ -15,11 +15,14 @@ O projeto consiste na **otimização de um sistema legado em Java**, aplicando p
 
 - Java 19  
 - Maven  
-- Banco de dados SQL
+- Banco de dados MySql
 
 ## Integrantes
 
-**Artur Azambuja** **RA:**1072311748 **GitHub:**@arturazambuja
-**Bernardo Bastos** **RA:**1072316947 **GitHub:**@BernardoBGaussmann
-**Gustavo Russeff** **RA:**1072315540 **GitHub:**@gustavorusseff
-**João Alfredo Robzza** **RA:**10723115939 **GitHub:**@JoaoAlfredoMader
+**Artur Azambuja** RA:1072311748 **GitHub:**@arturazambuja
+
+**Bernardo Bastos** RA:1072316947 **GitHub:**@BernardoBGaussmann
+
+**Gustavo Russeff** RA:1072315540 **GitHub:**@gustavorusseff
+
+**João Alfredo Robzza** RA:10723115939 **GitHub:**@JoaoAlfredoMader
