@@ -1,10 +1,25 @@
-# Loans-software# 💼 Loans Software
+# 💻 Loans Software – Projeto de Otimização
 
-Este projeto é uma aplicação Java voltada para o gerenciamento de empréstimos (loans).  
-Atualmente, o sistema está passando por um **processo de otimização** e **reestruturação** como parte de um projeto acadêmico, com o objetivo de aprimorar o desempenho, a organização do código e a experiência do usuário.
+**Universidade do Sul de Santa Catarina – UNISUL**  
+**Unidade Curricular:** Gestão e Qualidade de Software  
+**Professor:** Osmar de Oliveira Braz Júnior  
+**Atividade:** A3 – Desempenho de Compreensão  
 
 ---
 
-## 🎯 Objetivo do Projeto
+## 🎯 Objetivo
 
-O objetivo principal é **otimizar e modernizar** um software legado feito em Java, implementando boas práticas de programação, separação em camadas e possíveis melhorias na interface e persistência de dados.
+O projeto consiste na **otimização de um sistema legado em Java**, aplicando práticas de **gestão de configuração de software**, **integração contínua (CI/CD)** e **automação de testes**, com o intuito de melhorar a **qualidade, desempenho e manutenibilidade** do código.
+
+## ⚙️ Tecnologias Utilizadas
+
+- Java 19  
+- Maven  
+- Banco de dados SQL
+
+## Integrantes
+
+**Artur Azambuja** **RA:**1072311748 **GitHub:**@arturazambuja
+**Bernardo Bastos** **RA:**1072316947 **GitHub:**@BernardoBGaussmann
+**Gustavo Russeff** **RA:**1072315540 **GitHub:**@gustavorusseff
+**João Alfredo Robzza** **RA:**10723115939 **GitHub:**@JoaoAlfredoMader
