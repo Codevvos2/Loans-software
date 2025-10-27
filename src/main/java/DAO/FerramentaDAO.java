@@ -45,7 +45,7 @@ public class FerramentaDAO {
 
            
             String server = "localhost"; 
-            String database = "db_ferramenta";
+            String database = "db_loans_software";
             String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
             String user = "root";
             String password = "root";

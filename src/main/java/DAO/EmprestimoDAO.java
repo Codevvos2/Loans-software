@@ -46,7 +46,7 @@ public class EmprestimoDAO {
 
             
             String server = "localhost"; 
-            String database = "db_emprestimo";
+            String database = "db_loans_software";
             String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
             String user = "root";
             String password = "root";
