@@ -126,14 +126,16 @@ public class FerramentaDAO {
 
     }
 
-    // Deleta um aluno espec�fico pelo seu campo ID
     public boolean DeleteFerramentaBD(int idf) {
+        String sql = "DELETE FROM tb_ferramenta WHERE idf = ?";
         try {
-            Statement stmt = this.getConexao().createStatement();
-            stmt.executeUpdate("DELETE FROM tb_ferramenta WHERE idf = " + idf);
-            stmt.close();            
-            
+            PreparedStatement stmt = this.getConexao().prepareStatement(sql);
+            stmt.setInt(1, idf);
+            stmt.executeUpdate();
+            stmt.close();
+
         } catch (SQLException erro) {
+            throw new RuntimeException(erro);
         }
         
         return true;
