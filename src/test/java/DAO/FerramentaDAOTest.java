@@ -56,4 +56,20 @@ public class FerramentaDAOTest {
         assertEquals(NOVO_VALOR, f_verificada.getValor(), 0.001, "O Valor deve ser atualizado no banco.");
         assertEquals(NOVA_MARCA, f_verificada.getMarca(), "A Marca deve ser atualizada no banco.");
     }
+
+    @Test
+    void testC_DeleteFerramentaBD_Success() {
+        Ferramenta f = new Ferramenta(ID_TESTE, NOME_TESTE, "Marca", 50.00, "Setor", 10);
+        dao.InsertFerramentaBD(f);
+
+        Ferramenta f_antes = dao.carregaFerramenta(ID_TESTE);
+        assertNotNull(f_antes, "O registro deve existir antes da exclusão.");
+
+        boolean resultado = dao.DeleteFerramentaBD(ID_TESTE);
+
+        assertTrue(resultado, "A exclusão deve retornar TRUE em caso de sucesso.");
+
+        Ferramenta f_verificada = dao.carregaFerramenta(ID_TESTE);
+        assertEquals(0, f_verificada.getIdf(), "O registro deve ter sido excluído (ID é 0 quando não encontrado).");
+    }
 }
