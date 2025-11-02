@@ -48,7 +48,7 @@ public class FerramentaDAO {
             String database = "db_loans_software";
             String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
             String user = "root";
-            String password = "root";
+            String password = "123456";
 
             connection = DriverManager.getConnection(url, user, password);
 
@@ -169,24 +169,28 @@ public class FerramentaDAO {
     }
 
     public Ferramenta carregaFerramenta(int idf) {
-        
+
         Ferramenta objeto = new Ferramenta();
-        objeto.setIdf(idf);
-        
+
         try {
             Statement stmt = this.getConexao().createStatement();
             ResultSet res = stmt.executeQuery("SELECT * FROM tb_ferramenta WHERE idf = " + idf);
-            res.next();
 
-            objeto.setNome(res.getString("nome"));
-            objeto.setMarca(res.getString("marca"));
-            objeto.setValor(res.getDouble("valor"));
-            objeto.setSetor(res.getString("setor"));
-            objeto.setEstoque(res.getInt("estoque"));
+            if (res.next()) {
+                objeto.setIdf(idf);
+                objeto.setNome(res.getString("nome"));
+                objeto.setMarca(res.getString("marca"));
+                objeto.setValor(res.getDouble("valor"));
+                objeto.setSetor(res.getString("setor"));
+                objeto.setEstoque(res.getInt("estoque"));
+            } else {
+                objeto.setIdf(0);
+            }
 
-            stmt.close();            
-            
+            stmt.close();
+
         } catch (SQLException erro) {
+            throw new RuntimeException(erro);
         }
         return objeto;
     }
