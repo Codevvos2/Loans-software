@@ -34,4 +34,26 @@ public class FerramentaDAOTest {
         assertNotNull(f_recuperada, "A ferramenta deve ser recuperada do banco após a inserção.");
         assertEquals(NOME_TESTE, f_recuperada.getNome(), "O nome recuperado deve ser igual ao nome inserido.");
     }
+
+    @Test
+    void testB_UpdateFerramentaBD_Success() {
+        Ferramenta f_original = new Ferramenta(ID_TESTE, NOME_TESTE, "Marca Antiga", 10.00, "Setor", 1);
+        dao.InsertFerramentaBD(f_original);
+
+        Ferramenta f_carregada = dao.carregaFerramenta(ID_TESTE);
+        final double NOVO_VALOR = 99.99;
+        final String NOVA_MARCA = "Marca Nova LTDA";
+
+        f_carregada.setValor(NOVO_VALOR);
+        f_carregada.setMarca(NOVA_MARCA);
+
+        boolean resultado = dao.UpdateFerramentaBD(f_carregada);
+
+        assertTrue(resultado, "A atualização deve retornar TRUE em caso de sucesso.");
+
+        Ferramenta f_verificada = dao.carregaFerramenta(ID_TESTE);
+
+        assertEquals(NOVO_VALOR, f_verificada.getValor(), 0.001, "O Valor deve ser atualizado no banco.");
+        assertEquals(NOVA_MARCA, f_verificada.getMarca(), "A Marca deve ser atualizada no banco.");
+    }
 }
