@@ -75,4 +75,30 @@ public class FerramentaDAOTest {
         Ferramenta f_verificada = dao.carregaFerramenta(ID_TESTE);
         assertEquals(0, f_verificada.getIdf(), "O registro deve ter sido excluído (ID é 0 quando não encontrado).");
     }
+
+    @Test
+    void testD_InsertDuplicado_ShouldFail() {
+        Ferramenta f1 = new Ferramenta(ID_TESTE, NOME_TESTE, "Marca", 50.00, "Setor", 10);
+        dao.InsertFerramentaBD(f1);
+
+        Ferramenta f2 = new Ferramenta(ID_TESTE, "Nome Duplicado", "Marca", 60.00, "Setor", 5);
+
+        assertThrows(RuntimeException.class, () -> {
+            dao.InsertFerramentaBD(f2);
+        }, "A inserção de ID duplicado deve lançar uma exceção de Runtime.");
+    }
+
+    @Test
+    void testE_UpdateNonExistentID_ShouldReturnFalseOrNotAffect() {
+        final int ID_INEXISTENTE = ID_TESTE + 1;
+        Ferramenta f_nao_existe = dao.carregaFerramenta(ID_INEXISTENTE);
+        assertEquals(0, f_nao_existe.getIdf(), "Carregar item inexistente deve retornar ID=0.");
+        Ferramenta f_update = new Ferramenta(ID_INEXISTENTE, "Teste", "Teste", 10.0, "Teste", 1);
+
+        boolean resultado_update = dao.UpdateFerramentaBD(f_update);
+
+        assertTrue(resultado_update, "O update deve retornar TRUE mesmo se o ID não for encontrado.");
+        boolean resultado_delete = dao.DeleteFerramentaBD(ID_INEXISTENTE);
+        assertTrue(resultado_delete, "O delete deve retornar TRUE mesmo se o ID não for encontrado.");
+    }
 }
