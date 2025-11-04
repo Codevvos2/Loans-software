@@ -15,7 +15,7 @@ public class FerramentaDAOTest {
 
     @BeforeEach
     void setup() throws SQLException {
-        Connection testConn = new FerramentaDAO().getConexao();
+        Connection testConn = TestConnectionFactory.getTestConnection();
         dao = new FerramentaDAO(testConn);
         dao.DeleteFerramentaBD(ID_TESTE);
     }
