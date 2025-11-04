@@ -2,6 +2,8 @@ package DAO;
 
 import Model.Ferramenta;
 import org.junit.jupiter.api.*;;
+import java.sql.SQLException;
+import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,8 +14,9 @@ public class FerramentaDAOTest {
     private static final String NOME_TESTE = "Martelo de Teste";
 
     @BeforeEach
-    void setup() {
-        dao = new FerramentaDAO();
+    void setup() throws SQLException {
+        Connection testConn = new FerramentaDAO().getConexao();
+        dao = new FerramentaDAO(testConn);
         dao.DeleteFerramentaBD(ID_TESTE);
     }
 
