@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.Ferramenta;
+
 import java.util.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,14 +14,21 @@ public class FerramentaDAO {
 
     public static ArrayList<Ferramenta> ListaFerramenta = new ArrayList<Ferramenta>();
 
+    private Connection connection;
+
     public FerramentaDAO() {
+        this.connection = getConexao();
+    }
+
+    public FerramentaDAO(Connection testConnection) {
+        this.connection = testConnection;
     }
 
     public int maiorID() throws SQLException {
 
         int maiorID = 0;
         try {
-            Statement stmt = this.getConexao().createStatement();
+            Statement stmt = this.connection.createStatement();
             ResultSet res = stmt.executeQuery("SELECT MAX(idf) idf FROM tb_ferramenta");
             res.next();
             maiorID = res.getInt("idf");
@@ -35,16 +43,16 @@ public class FerramentaDAO {
 
     public Connection getConexao() {
 
-        Connection connection = null; 
+        Connection connection = null;
 
         try {
 
-      
+
             String driver = "com.mysql.cj.jdbc.Driver";
             Class.forName(driver);
 
-           
-            String server = "localhost"; 
+
+            String server = "localhost";
             String database = "db_loans_software";
             String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
             String user = "root";
@@ -52,7 +60,7 @@ public class FerramentaDAO {
 
             connection = DriverManager.getConnection(url, user, password);
 
-           
+
             if (connection != null) {
                 System.out.println("Status: Conectado!");
             } else {
@@ -61,8 +69,8 @@ public class FerramentaDAO {
 
             return connection;
 
-        } catch (ClassNotFoundException e) {  
-            System.out.println("O driver nao foi encontrado. " + e.getMessage() );
+        } catch (ClassNotFoundException e) {
+            System.out.println("O driver nao foi encontrado. " + e.getMessage());
             return null;
 
         } catch (SQLException e) {
@@ -71,20 +79,20 @@ public class FerramentaDAO {
         }
     }
 
-   
+
     public ArrayList getListaFerramenta() {
-        
-        ListaFerramenta.clear(); 
+
+        ListaFerramenta.clear();
 
         try {
-            Statement stmt = this.getConexao().createStatement();
+            Statement stmt = this.connection.createStatement();
             ResultSet res = stmt.executeQuery("SELECT * FROM tb_ferramenta");
             while (res.next()) {
 
                 int idf = res.getInt("idf");
                 String nome = res.getString("nome");
                 String marca = res.getString("marca");
-                double  valor = res.getDouble("valor");
+                double valor = res.getDouble("valor");
                 String setor = res.getString("setor");
                 int estoque = res.getInt("estoque");
 
@@ -101,12 +109,12 @@ public class FerramentaDAO {
         return ListaFerramenta;
     }
 
-   
+
     public boolean InsertFerramentaBD(Ferramenta objeto) {
         String sql = "INSERT INTO tb_ferramenta(idf, nome, marca, valor, setor, estoque) VALUES(?,?,?,?,?,?)";
 
         try {
-            PreparedStatement stmt = this.getConexao().prepareStatement(sql);
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
 
             stmt.setInt(1, objeto.getIdf());
             stmt.setString(2, objeto.getNome());
@@ -129,7 +137,7 @@ public class FerramentaDAO {
     public boolean DeleteFerramentaBD(int idf) {
         String sql = "DELETE FROM tb_ferramenta WHERE idf = ?";
         try {
-            PreparedStatement stmt = this.getConexao().prepareStatement(sql);
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
             stmt.setInt(1, idf);
             stmt.executeUpdate();
             stmt.close();
@@ -137,17 +145,17 @@ public class FerramentaDAO {
         } catch (SQLException erro) {
             throw new RuntimeException(erro);
         }
-        
+
         return true;
     }
 
-   
+
     public boolean UpdateFerramentaBD(Ferramenta objeto) {
 
         String sql = "UPDATE tb_ferramenta set nome = ? ,marca = ? ,valor = ? ,setor = ?,estoque = ? WHERE idf = ?";
 
         try {
-            PreparedStatement stmt = this.getConexao().prepareStatement(sql);
+            PreparedStatement stmt = this.connection.prepareStatement(sql);
 
             stmt.setString(1, objeto.getNome());
             stmt.setString(2, objeto.getMarca());
@@ -155,7 +163,7 @@ public class FerramentaDAO {
             stmt.setString(4, objeto.getSetor());
             stmt.setInt(5, objeto.getEstoque());
             stmt.setInt(6, objeto.getIdf());
-            
+
 
             stmt.execute();
             stmt.close();
@@ -173,7 +181,7 @@ public class FerramentaDAO {
         Ferramenta objeto = new Ferramenta();
 
         try {
-            Statement stmt = this.getConexao().createStatement();
+            Statement stmt = this.connection.createStatement();
             ResultSet res = stmt.executeQuery("SELECT * FROM tb_ferramenta WHERE idf = " + idf);
 
             if (res.next()) {
