@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class FerramentaTest {
+public class TestFerramenta {
 
     private final String NOME_PADRAO = "Martelo de Borracha";
     private final String MARCA_PADRAO = "Gedore";

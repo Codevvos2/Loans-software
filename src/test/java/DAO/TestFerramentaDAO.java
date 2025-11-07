@@ -7,7 +7,7 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FerramentaDAOTest {
+public class TestFerramentaDAO {
 
     private FerramentaDAO dao;
     private static final int ID_TESTE = 999;
