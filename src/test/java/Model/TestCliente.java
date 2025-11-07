@@ -95,4 +95,11 @@ class TestCliente {
         assertTrue(result);
         verify(daoMock, times(1)).DeleteClienteBD(10);
     }
+    @Test
+    void testUpdateClienteBD() {
+        boolean result = cliente.UpdateClienteBD(1, "Maria", "maria@email.com", "Av. Brasil", "(21) 91234-5678");
+
+        assertTrue(result);
+        verify(daoMock, times(1)).UpdateClienteBD(any(Cliente.class));
+    }
 }
