@@ -37,6 +37,7 @@ class TestEmprestimo {
         assertEquals("2025-11-01", emprestimo.getDatadev());
         assertEquals("ativo", emprestimo.getStatus());
     }
+    
     @Test
     void testToStringContainsFields() {
         emprestimo.setDataloc("2025-10-01");
@@ -55,5 +56,18 @@ class TestEmprestimo {
         assertEquals("2025-01-01", e.getDataloc());
         assertEquals("2025-02-01", e.getDatadev());
         assertEquals("ativo", e.getStatus());
+    }
+
+    @Test
+    void testGetListaEmprestimo() {
+        ArrayList<String> lista = new ArrayList<>();
+        lista.add("Emprestimo 1");
+
+        when(daoMock.getListaEmprestimo()).thenReturn(lista);
+
+        ArrayList result = emprestimo.getListaEmprestimo();
+
+        assertEquals(lista, result);
+        verify(daoMock, times(1)).getListaEmprestimo();
     }
 }
