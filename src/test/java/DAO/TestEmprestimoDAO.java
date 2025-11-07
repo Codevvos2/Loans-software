@@ -65,7 +65,7 @@ class TestEmprestimoDAO {
         Emprestimo e = lista.get(0);
         assertEquals("ativo", e.getStatus());
     }
-    
+
     @Test
     void testInsertEmprestimoBD() throws Exception {
         Emprestimo emp = new Emprestimo(1, 5, "2025-01-01", "2025-02-01", "ativo", 2, 3);
@@ -94,5 +94,24 @@ class TestEmprestimoDAO {
 
         assertTrue(result);
         verify(preparedStatementMock, times(1)).execute();
+    }
+    
+    @Test
+    void testCarregaEmprestimo() throws Exception {
+        when(connectionMock.createStatement()).thenReturn(statementMock);
+        when(statementMock.executeQuery(anyString())).thenReturn(resultSetMock);
+        when(resultSetMock.next()).thenReturn(true);
+        when(resultSetMock.getInt("quantidade")).thenReturn(5);
+        when(resultSetMock.getString("dataloc")).thenReturn("2025-01-01");
+        when(resultSetMock.getString("datadev")).thenReturn("2025-02-01");
+        when(resultSetMock.getString("status")).thenReturn("ativo");
+        when(resultSetMock.getInt("idc")).thenReturn(2);
+        when(resultSetMock.getInt("idf")).thenReturn(3);
+
+        Emprestimo e = dao.carregaEmprestimo(10);
+
+        assertEquals(10, e.getIde());
+        assertEquals(5, e.getQuantidade());
+        assertEquals("2025-01-01", e.getDataloc());
     }
 }
