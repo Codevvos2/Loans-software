@@ -81,4 +81,12 @@ class TestEmprestimo {
         verify(daoMock, times(1)).InsertEmprestimoBD(any(Emprestimo.class));
         verify(daoMock, times(1)).maiorID();
     }
+    
+    @Test
+    void testDeleteEmprestimoBD() {
+        boolean result = emprestimo.DeleteEmprestimoBD(7);
+
+        assertTrue(result);
+        verify(daoMock, times(1)).DeleteEmprestimoBD(7);
+    }
 }
