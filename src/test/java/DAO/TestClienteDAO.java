@@ -55,4 +55,15 @@ public class TestClienteDAO {
         assertEquals("João Atualizado", clienteBanco.getNome(), "O nome não foi atualizado corretamente");
     }
 
+    @Test
+    @Order(5)
+    void testDeleteClienteBD() {
+        boolean resultado = dao.DeleteClienteBD(novoId);
+        assertTrue(resultado, "Falha ao deletar cliente");
+
+        Cliente clienteBanco = dao.carregaCliente(novoId);
+        assertNull(clienteBanco.getNome(), "Cliente não foi removido corretamente");
+    }
+
+
 }
