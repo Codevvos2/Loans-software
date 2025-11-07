@@ -3,6 +3,7 @@ package Model;
 import java.util.*;
 import DAO.FerramentaDAO;
 import java.sql.SQLException;
+import java.sql.Connection;
 
 public class Ferramenta extends FerramentaAbstract {
 
@@ -34,7 +35,11 @@ public class Ferramenta extends FerramentaAbstract {
         this.dao = new FerramentaDAO(); 
     }
 
-   
+    public Ferramenta(Connection testConnection) {
+        this.dao = new FerramentaDAO(testConnection);
+    }
+
+
     public double getValor() {
         return valor;
     }
@@ -70,10 +75,6 @@ public class Ferramenta extends FerramentaAbstract {
                 + "\n -----------";
     }
 
-    /*
-    
-    
-     */
    
     public ArrayList getListaFerramenta() {
       
@@ -107,16 +108,14 @@ public class Ferramenta extends FerramentaAbstract {
         return true;
     }
 
-  
-    
-    public Ferramenta carregaFerramenta(int idf) {
 
-        dao.carregaFerramenta(idf);
-        return null;
+    public Ferramenta carregaFerramenta(int idf) {
+        return dao.carregaFerramenta(idf);
     }
-    
-  
-        public int maiorID() throws SQLException{
+
+
+
+    public int maiorID() throws SQLException{
 
         return dao.maiorID();
     }   

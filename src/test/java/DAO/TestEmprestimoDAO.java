@@ -130,7 +130,9 @@ class TestEmprestimoDAO {
                     () -> DriverManager.getConnection(
                             contains("jdbc:mysql://localhost:3306/db_loans_software"),
                             eq("root"),
+
                             eq("root")
+
                     ),
                     times(1)
             );

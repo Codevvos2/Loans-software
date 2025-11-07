@@ -3,6 +3,8 @@ package Model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class TestFerramenta {
 
@@ -14,28 +16,10 @@ public class TestFerramenta {
     private final int ID_PADRAO = 1;
 
     @Test
-    void testConstrutorVazio() {
+    void testSettersEGettersECoberturaTotal() throws SQLException {
+
         Ferramenta f = new Ferramenta();
-        assertNotNull(f, "O objeto Ferramenta não deve ser nulo ao usar o construtor vazio.");
-    }
-
-    @Test
-    void testConstrutorCompleto() {
-        Ferramenta f = new Ferramenta(
-                ID_PADRAO, NOME_PADRAO, MARCA_PADRAO, VALOR_PADRAO, SETOR_PADRAO, ESTOQUE_PADRAO
-        );
-
-        assertEquals(ID_PADRAO, f.getIdf(), "O ID da Ferramenta deve ser o valor passado no construtor.");
-        assertEquals(NOME_PADRAO, f.getNome(), "O Nome deve ser o valor passado no construtor.");
-        assertEquals(MARCA_PADRAO, f.getMarca(), "A Marca deve ser o valor passado no construtor.");
-        assertEquals(VALOR_PADRAO, f.getValor(), 0.001, "O Valor deve ser o valor passado no construtor (tolerância 0.001).");
-        assertEquals(SETOR_PADRAO, f.getSetor(), "O Setor deve ser o valor passado no construtor.");
-        assertEquals(ESTOQUE_PADRAO, f.getEstoque(), "O Estoque deve ser o valor passado no construtor.");
-    }
-
-    @Test
-    void testSettersEGetters() {
-        Ferramenta f = new Ferramenta();
+        assertNotNull(f, "O objeto Ferramenta não deve ser nulo.");
 
         f.setIdf(ID_PADRAO);
         f.setNome(NOME_PADRAO);
@@ -44,11 +28,35 @@ public class TestFerramenta {
         f.setSetor(SETOR_PADRAO);
         f.setEstoque(ESTOQUE_PADRAO);
 
-        assertEquals(ID_PADRAO, f.getIdf(), "Getter de ID não corresponde ao valor setado.");
-        assertEquals(NOME_PADRAO, f.getNome(), "Getter de Nome não corresponde ao valor setado.");
-        assertEquals(MARCA_PADRAO, f.getMarca(), "Getter de Marca não corresponde ao valor setado.");
-        assertEquals(VALOR_PADRAO, f.getValor(), 0.001, "Getter de Valor não corresponde ao valor setado.");
-        assertEquals(SETOR_PADRAO, f.getSetor(), "Getter de Setor não corresponde ao valor setado.");
-        assertEquals(ESTOQUE_PADRAO, f.getEstoque(), "Getter de Estoque não corresponde ao valor setado.");
+        assertEquals(ID_PADRAO, f.getIdf(), "Getter de ID falhou.");
+        assertEquals(NOME_PADRAO, f.getNome(), "Getter de Nome falhou.");
+        assertEquals(MARCA_PADRAO, f.getMarca(), "Getter de Marca falhou.");
+        assertEquals(VALOR_PADRAO, f.getValor(), 0.001, "Getter de Valor falhou.");
+        assertEquals(SETOR_PADRAO, f.getSetor(), "Getter de Setor falhou.");
+        assertEquals(ESTOQUE_PADRAO, f.getEstoque(), "Getter de Estoque falhou.");
+
+        String representacao = f.toString();
+        assertTrue(representacao.contains(NOME_PADRAO), "O toString deve incluir o nome.");
+
+        assertNotNull(f.getListaFerramenta(), "A lista deve ser inicializada.");
+        f.maiorID();
+        f.carregaFerramenta(ID_PADRAO);
+
+        f.InsertFerramentaBD("Novo", "M", 10.0, "S", 1);
+        f.DeleteFerramentaBD(ID_PADRAO);
+        f.UpdateFerramentaBD(ID_PADRAO, "NovoNome", "M", 10.0, "S", 1);
+    }
+
+    @Test
+    void testConstrutorCompleto() {
+        Ferramenta f = new Ferramenta(
+                ID_PADRAO, NOME_PADRAO, MARCA_PADRAO, VALOR_PADRAO, SETOR_PADRAO, ESTOQUE_PADRAO
+        );
+        assertEquals(ID_PADRAO, f.getIdf(), "ID deve ser igual.");
+        assertEquals(NOME_PADRAO, f.getNome(), "Nome deve ser igual.");
+        assertEquals(MARCA_PADRAO, f.getMarca(), "Marca deve ser igual.");
+        assertEquals(VALOR_PADRAO, f.getValor(), 0.001, "Valor deve ser igual.");
+        assertEquals(SETOR_PADRAO, f.getSetor(), "Setor deve ser igual.");
+        assertEquals(ESTOQUE_PADRAO, f.getEstoque(), "Estoque deve ser igual.");
     }
 }

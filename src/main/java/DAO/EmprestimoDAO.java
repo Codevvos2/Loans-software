@@ -102,7 +102,6 @@ public class EmprestimoDAO {
         return ListaEmprestimo;
     }
 
-    // Cadastra novo aluno
     public boolean InsertEmprestimoBD(Emprestimo objeto) {
         String sql = "INSERT INTO tb_emprestimo(ide,quantidade,dataloc,datadev,status, idc,idf) VALUES(?,?,?,?,?,?,?)";
 
@@ -130,7 +129,6 @@ public class EmprestimoDAO {
 
     }
 
-    // Deleta um aluno espec�fico pelo seu campo ID
     public boolean DeleteEmprestimoBD(int ide) {
         try {
             Statement stmt = this.getConexao().createStatement();

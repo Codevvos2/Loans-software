@@ -4,6 +4,7 @@ import Model.Ferramenta;
 import org.junit.jupiter.api.*;;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -100,5 +101,22 @@ public class TestFerramentaDAO {
         assertTrue(resultado_update, "O update deve retornar TRUE mesmo se o ID não for encontrado.");
         boolean resultado_delete = dao.DeleteFerramentaBD(ID_INEXISTENTE);
         assertTrue(resultado_delete, "O delete deve retornar TRUE mesmo se o ID não for encontrado.");
+    }
+
+    @Test
+    void testD_ListagemEMaiorID_Success() throws SQLException {
+        Ferramenta f1 = new Ferramenta(1000, "Ferramenta 1", "M", 10.0, "S", 1);
+        Ferramenta f2 = new Ferramenta(1001, "Ferramenta 2", "M", 20.0, "S", 2);
+        dao.InsertFerramentaBD(f1);
+        dao.InsertFerramentaBD(f2);
+
+        assertEquals(1001, dao.maiorID(), "O maior ID deve ser o último item inserido.");
+
+        ArrayList<Ferramenta> lista = dao.getListaFerramenta();
+
+        assertTrue(lista.size() >= 2, "A lista deve conter ao menos os dois itens inseridos.");
+
+        dao.DeleteFerramentaBD(1000);
+        dao.DeleteFerramentaBD(1001);
     }
 }

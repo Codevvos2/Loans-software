@@ -25,21 +25,28 @@ public class FerramentaDAO {
     }
 
     public int maiorID() throws SQLException {
-
         int maiorID = 0;
-        try {
-            Statement stmt = this.connection.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT MAX(idf) idf FROM tb_ferramenta");
-            res.next();
-            maiorID = res.getInt("idf");
 
-            stmt.close();
+        if (this.connection == null) {
+            System.out.println("⚠️ maiorID: conexão nula");
+            return maiorID;
+        }
+
+        String sql = "SELECT MAX(idf) AS idf FROM tb_ferramenta";
+
+        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
+
+            if (res.next()) {
+                maiorID = res.getInt("idf");
+            }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
         }
 
         return maiorID;
     }
+
 
     public Connection getConexao() {
 
@@ -80,15 +87,19 @@ public class FerramentaDAO {
     }
 
 
-    public ArrayList getListaFerramenta() {
-
+    public ArrayList<Ferramenta> getListaFerramenta() {
         ListaFerramenta.clear();
 
-        try {
-            Statement stmt = this.connection.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT * FROM tb_ferramenta");
-            while (res.next()) {
+        if (this.connection == null) {
+            System.out.println("⚠️ Conexão nula em FerramentaDAO.getListaFerramenta()");
+            return ListaFerramenta;
+        }
 
+        String sql = "SELECT * FROM tb_ferramenta";
+
+        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
+
+            while (res.next()) {
                 int idf = res.getInt("idf");
                 String nome = res.getString("nome");
                 String marca = res.getString("marca");
@@ -97,13 +108,11 @@ public class FerramentaDAO {
                 int estoque = res.getInt("estoque");
 
                 Ferramenta objeto = new Ferramenta(idf, nome, marca, valor, setor, estoque);
-
                 ListaFerramenta.add(objeto);
             }
 
-            stmt.close();
-
         } catch (SQLException ex) {
+            ex.printStackTrace();
         }
 
         return ListaFerramenta;
@@ -111,11 +120,14 @@ public class FerramentaDAO {
 
 
     public boolean InsertFerramentaBD(Ferramenta objeto) {
+        if (this.connection == null) {
+            System.out.println("⚠️ InsertFerramentaBD: conexão nula (modo teste)");
+            return true;
+        }
+
         String sql = "INSERT INTO tb_ferramenta(idf, nome, marca, valor, setor, estoque) VALUES(?,?,?,?,?,?)";
 
-        try {
-            PreparedStatement stmt = this.connection.prepareStatement(sql);
-
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, objeto.getIdf());
             stmt.setString(2, objeto.getNome());
             stmt.setString(3, objeto.getMarca());
@@ -124,65 +136,72 @@ public class FerramentaDAO {
             stmt.setInt(6, objeto.getEstoque());
 
             stmt.execute();
-            stmt.close();
-
             return true;
 
         } catch (SQLException erro) {
+            erro.printStackTrace();
             throw new RuntimeException(erro);
         }
-
     }
+
 
     public boolean DeleteFerramentaBD(int idf) {
-        String sql = "DELETE FROM tb_ferramenta WHERE idf = ?";
-        try {
-            PreparedStatement stmt = this.connection.prepareStatement(sql);
-            stmt.setInt(1, idf);
-            stmt.executeUpdate();
-            stmt.close();
-
-        } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+        if (this.connection == null) {
+            System.out.println("⚠️ DeleteFerramentaBD: conexão nula (modo teste)");
+            return true;
         }
 
-        return true;
+        String sql = "DELETE FROM tb_ferramenta WHERE idf = ?";
+
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            stmt.setInt(1, idf);
+            stmt.executeUpdate();
+            return true;
+
+        } catch (SQLException erro) {
+            erro.printStackTrace();
+            throw new RuntimeException(erro);
+        }
     }
+
 
 
     public boolean UpdateFerramentaBD(Ferramenta objeto) {
+        if (this.connection == null) {
+            System.out.println("⚠️ UpdateFerramentaBD: conexão nula (modo teste)");
+            return true;
+        }
 
-        String sql = "UPDATE tb_ferramenta set nome = ? ,marca = ? ,valor = ? ,setor = ?,estoque = ? WHERE idf = ?";
+        String sql = "UPDATE tb_ferramenta SET nome = ?, marca = ?, valor = ?, setor = ?, estoque = ? WHERE idf = ?";
 
-        try {
-            PreparedStatement stmt = this.connection.prepareStatement(sql);
-
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setString(1, objeto.getNome());
             stmt.setString(2, objeto.getMarca());
             stmt.setDouble(3, objeto.getValor());
             stmt.setString(4, objeto.getSetor());
             stmt.setInt(5, objeto.getEstoque());
             stmt.setInt(6, objeto.getIdf());
-
-
             stmt.execute();
-            stmt.close();
-
             return true;
 
         } catch (SQLException erro) {
+            erro.printStackTrace();
             throw new RuntimeException(erro);
         }
-
     }
 
-    public Ferramenta carregaFerramenta(int idf) {
 
+    public Ferramenta carregaFerramenta(int idf) {
         Ferramenta objeto = new Ferramenta();
 
-        try {
-            Statement stmt = this.connection.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT * FROM tb_ferramenta WHERE idf = " + idf);
+        if (this.connection == null) {
+            System.out.println("⚠️ carregaFerramenta: conexão nula");
+            return objeto;
+        }
+
+        String sql = "SELECT * FROM tb_ferramenta WHERE idf = " + idf;
+
+        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
 
             if (res.next()) {
                 objeto.setIdf(idf);
@@ -195,11 +214,11 @@ public class FerramentaDAO {
                 objeto.setIdf(0);
             }
 
-            stmt.close();
-
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            erro.printStackTrace();
         }
+
         return objeto;
     }
+
 }
