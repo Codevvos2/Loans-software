@@ -43,4 +43,16 @@ public class TestClienteDAO {
         assertEquals("João Teste", cliente.getNome(), "Nome não corresponde");
         assertEquals("joao@teste.com", cliente.getEmail(), "Email não corresponde");
     }
+
+    @Test
+    @Order(4)
+    void testUpdateClienteBD() {
+        Cliente clienteAtualizado = new Cliente(novoId, "João Atualizado", "joao@novoemail.com", "Rua Nova 456", "8888-8888");
+        boolean resultado = dao.UpdateClienteBD(clienteAtualizado);
+        assertTrue(resultado, "Falha ao atualizar cliente");
+
+        Cliente clienteBanco = dao.carregaCliente(novoId);
+        assertEquals("João Atualizado", clienteBanco.getNome(), "O nome não foi atualizado corretamente");
+    }
+
 }
