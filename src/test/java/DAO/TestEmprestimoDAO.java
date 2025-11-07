@@ -95,7 +95,7 @@ class TestEmprestimoDAO {
         assertTrue(result);
         verify(preparedStatementMock, times(1)).execute();
     }
-    
+
     @Test
     void testCarregaEmprestimo() throws Exception {
         when(connectionMock.createStatement()).thenReturn(statementMock);
@@ -113,5 +113,27 @@ class TestEmprestimoDAO {
         assertEquals(10, e.getIde());
         assertEquals(5, e.getQuantidade());
         assertEquals("2025-01-01", e.getDataloc());
+    }
+
+    @Test
+    void testGetConexao_Sucesso() throws Exception {
+        try (MockedStatic<DriverManager> driverManagerMock = Mockito.mockStatic(DriverManager.class)) {
+            Connection mockConnection = mock(Connection.class);
+            driverManagerMock.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
+                    .thenReturn(mockConnection);
+
+            EmprestimoDAO daoLocal = new EmprestimoDAO();
+            Connection result = daoLocal.getConexao();
+
+            assertNotNull(result);
+            driverManagerMock.verify(
+                    () -> DriverManager.getConnection(
+                            contains("jdbc:mysql://localhost:3306/db_loans_software"),
+                            eq("root"),
+                            eq("root")
+                    ),
+                    times(1)
+            );
+        }
     }
 }
