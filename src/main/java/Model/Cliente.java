@@ -36,7 +36,7 @@ public class Cliente extends Pessoa {
         return endereco;
     }
 
-    public void setEndereco(String curso) {
+    public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
 
