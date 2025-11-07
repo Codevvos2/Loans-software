@@ -37,7 +37,7 @@ class TestEmprestimo {
         assertEquals("2025-11-01", emprestimo.getDatadev());
         assertEquals("ativo", emprestimo.getStatus());
     }
-    
+
     @Test
     void testToStringContainsFields() {
         emprestimo.setDataloc("2025-10-01");
@@ -69,5 +69,16 @@ class TestEmprestimo {
 
         assertEquals(lista, result);
         verify(daoMock, times(1)).getListaEmprestimo();
+    }
+
+    @Test
+    void testInsertEmprestimoBD() throws SQLException {
+        when(daoMock.maiorID()).thenReturn(10);
+
+        boolean result = emprestimo.InsertEmprestimoBD(5, "2025-10-01", "2025-11-01", "ativo", 2, 3);
+
+        assertTrue(result);
+        verify(daoMock, times(1)).InsertEmprestimoBD(any(Emprestimo.class));
+        verify(daoMock, times(1)).maiorID();
     }
 }
