@@ -78,4 +78,14 @@ class TestCliente {
         assertEquals(lista, result);
         verify(daoMock, times(1)).getListaCliente();
     }
+    @Test
+    void testInsertClienteBD() throws SQLException {
+        when(daoMock.maiorID()).thenReturn(5);
+
+        boolean result = cliente.InsertClienteBD("João da Silva", "joao@email.com", "Rua das Flores, 123", "(11) 98765-4321");
+
+        assertTrue(result);
+        verify(daoMock, times(1)).InsertClienteBD(any(Cliente.class));
+        verify(daoMock, times(1)).maiorID();
+    }
 }
