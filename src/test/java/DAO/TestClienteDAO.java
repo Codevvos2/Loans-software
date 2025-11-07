@@ -27,4 +27,13 @@ public class TestClienteDAO {
         boolean resultado = dao.InsertClienteBD(cliente);
         assertTrue(resultado, "Falha ao inserir cliente no banco");
     }
+
+    @Test
+    @Order(2)
+    void testGetListaCliente() {
+        ArrayList<Cliente> lista = dao.getListaCliente();
+        assertNotNull(lista, "A lista de clientes não deve ser nula");
+        assertTrue(lista.size() > 0, "A lista de clientes deve conter registros");
+    }
+
 }
