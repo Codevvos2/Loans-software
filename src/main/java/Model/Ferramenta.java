@@ -75,10 +75,6 @@ public class Ferramenta extends FerramentaAbstract {
                 + "\n -----------";
     }
 
-    /*
-    
-    
-     */
    
     public ArrayList getListaFerramenta() {
       
