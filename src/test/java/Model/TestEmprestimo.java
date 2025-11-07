@@ -37,4 +37,23 @@ class TestEmprestimo {
         assertEquals("2025-11-01", emprestimo.getDatadev());
         assertEquals("ativo", emprestimo.getStatus());
     }
+    @Test
+    void testToStringContainsFields() {
+        emprestimo.setDataloc("2025-10-01");
+        emprestimo.setDatadev("2025-11-01");
+        emprestimo.setStatus("ativo");
+
+        String texto = emprestimo.toString();
+        assertTrue(texto.contains("Dataloc"));
+        assertTrue(texto.contains("Datadev"));
+        assertTrue(texto.contains("Status"));
+    }
+
+    @Test
+    void testConstrutorComParametros() {
+        Emprestimo e = new Emprestimo("2025-01-01", "2025-02-01", "ativo");
+        assertEquals("2025-01-01", e.getDataloc());
+        assertEquals("2025-02-01", e.getDatadev());
+        assertEquals("ativo", e.getStatus());
+    }
 }
