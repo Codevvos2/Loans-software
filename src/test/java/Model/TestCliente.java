@@ -108,4 +108,10 @@ class TestCliente {
         verify(daoMock, times(1)).carregaCliente(15);
     }
 
+    @Test
+    void testMaiorID() throws SQLException {
+        when(daoMock.maiorID()).thenReturn(8);
+        assertEquals(8, cliente.maiorID());
+        verify(daoMock, times(1)).maiorID();
+    }
 }
