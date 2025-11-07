@@ -39,20 +39,17 @@ public class ClienteDAO {
 
         try {
 
-            // Carregamento do JDBC Driver
             String driver = "com.mysql.cj.jdbc.Driver";
             Class.forName(driver);
 
-            // Configurar a conex�o
             String server = "localhost"; //caminho do MySQL
             String database = "db_loans_software";
             String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
             String user = "root";
-            String password = "123456";
+            String password = "root";
 
             connection = DriverManager.getConnection(url, user, password);
 
-            // Testando..
             if (connection != null) {
                 System.out.println("Status: Conectado!");
             } else {
@@ -71,10 +68,9 @@ public class ClienteDAO {
         }
     }
 
-    // Retorna a Lista de Clientes(objetos)
     public ArrayList getListaCliente() {
         
-        ListaCliente.clear(); // Limpa nosso ArrayList
+        ListaCliente.clear();
 
         try {
             Statement stmt = this.getConexao().createStatement();
@@ -100,7 +96,6 @@ public class ClienteDAO {
         return ListaCliente;
     }
 
-    // Cadastra novo aluno
     public boolean InsertClienteBD(Cliente objeto) {
         String sql = "INSERT INTO tb_cliente(idc,nome,email,endereco,telefone) VALUES(?,?,?,?,?)";
 
@@ -124,7 +119,6 @@ public class ClienteDAO {
 
     }
 
-    // Deleta um Cliente espec�fico pelo seu campo ID
     public boolean DeleteClienteBD(int idc) {
         try {
             Statement stmt = this.getConexao().createStatement();
@@ -137,7 +131,6 @@ public class ClienteDAO {
         return true;
     }
 
-    // Edita um Cliente espec�fico pelo seu campo ID id,nome,email,endereco,telefone
     public boolean UpdateClienteBD(Cliente objeto) {
 
         String sql = "UPDATE tb_cliente set nome = ? ,email = ? ,endereco = ? ,telefone = ? WHERE idc = ?";

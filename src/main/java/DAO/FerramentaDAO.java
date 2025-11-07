@@ -63,7 +63,7 @@ public class FerramentaDAO {
             String database = "db_loans_software";
             String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
             String user = "root";
-            String password = "123456";
+            String password = "root";
 
             connection = DriverManager.getConnection(url, user, password);
 
@@ -122,7 +122,7 @@ public class FerramentaDAO {
     public boolean InsertFerramentaBD(Ferramenta objeto) {
         if (this.connection == null) {
             System.out.println("⚠️ InsertFerramentaBD: conexão nula (modo teste)");
-            return true; // retorna true para não quebrar os testes
+            return true;
         }
 
         String sql = "INSERT INTO tb_ferramenta(idf, nome, marca, valor, setor, estoque) VALUES(?,?,?,?,?,?)";
@@ -169,7 +169,7 @@ public class FerramentaDAO {
     public boolean UpdateFerramentaBD(Ferramenta objeto) {
         if (this.connection == null) {
             System.out.println("⚠️ UpdateFerramentaBD: conexão nula (modo teste)");
-            return true; // evita NullPointerException durante os testes
+            return true;
         }
 
         String sql = "UPDATE tb_ferramenta SET nome = ?, marca = ?, valor = ?, setor = ?, estoque = ? WHERE idf = ?";
