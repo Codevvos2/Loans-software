@@ -36,4 +36,11 @@ public class TestClienteDAO {
         assertTrue(lista.size() > 0, "A lista de clientes deve conter registros");
     }
 
+    @Test
+    @Order(3)
+    void testCarregaCliente() {
+        Cliente cliente = dao.carregaCliente(novoId);
+        assertEquals("João Teste", cliente.getNome(), "Nome não corresponde");
+        assertEquals("joao@teste.com", cliente.getEmail(), "Email não corresponde");
+    }
 }
