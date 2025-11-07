@@ -66,4 +66,16 @@ class TestCliente {
         assertEquals("Av. Brasil, 456", c.getEndereco());
         assertEquals("(21) 91234-5678", c.getTelefone());
     }
+    @Test
+    void testGetListaCliente() {
+        ArrayList<String> lista = new ArrayList<>();
+        lista.add("Cliente 1");
+
+        when(daoMock.getListaCliente()).thenReturn(lista);
+
+        ArrayList result = cliente.getListaCliente();
+
+        assertEquals(lista, result);
+        verify(daoMock, times(1)).getListaCliente();
+    }
 }
