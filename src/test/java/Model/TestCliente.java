@@ -102,4 +102,10 @@ class TestCliente {
         assertTrue(result);
         verify(daoMock, times(1)).UpdateClienteBD(any(Cliente.class));
     }
+    @Test
+    void testCarregaCliente() {
+        cliente.carregaCliente(15);
+        verify(daoMock, times(1)).carregaCliente(15);
+    }
+
 }
