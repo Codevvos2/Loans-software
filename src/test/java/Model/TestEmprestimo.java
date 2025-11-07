@@ -89,12 +89,25 @@ class TestEmprestimo {
         assertTrue(result);
         verify(daoMock, times(1)).DeleteEmprestimoBD(7);
     }
-    
+
     @Test
     void testUpdateEmprestimoBD() {
         boolean result = emprestimo.UpdateEmprestimoBD(1, 3, "2025-10-01", "2025-11-01", "ativo", 2, 3);
 
         assertTrue(result);
         verify(daoMock, times(1)).UpdateEmprestimoBD(any(Emprestimo.class));
+    }
+
+    @Test
+    void testCarregaEmprestimo() {
+        emprestimo.carregaEmprestimo(10);
+        verify(daoMock, times(1)).carregaEmprestimo(10);
+    }
+
+    @Test
+    void testMaiorID() throws SQLException {
+        when(daoMock.maiorID()).thenReturn(7);
+        assertEquals(7, emprestimo.maiorID());
+        verify(daoMock, times(1)).maiorID();
     }
 }
