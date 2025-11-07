@@ -88,4 +88,11 @@ class TestCliente {
         verify(daoMock, times(1)).InsertClienteBD(any(Cliente.class));
         verify(daoMock, times(1)).maiorID();
     }
+    @Test
+    void testDeleteClienteBD() {
+        boolean result = cliente.DeleteClienteBD(10);
+
+        assertTrue(result);
+        verify(daoMock, times(1)).DeleteClienteBD(10);
+    }
 }
