@@ -7,32 +7,51 @@ import java.sql.Statement;
 
 public class TestConnectionFactory {
 
-    private static final String URL_SQLITE = "jdbc:sqlite::memory:";
+    private static Connection connection;
 
     public static Connection getTestConnection() throws SQLException {
         try {
-            Connection connection = DriverManager.getConnection(URL_SQLITE);
+            if (connection != null && !connection.isClosed()) {
+                return connection;
+            }
 
-            createTestTables(connection);
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS tb_cliente (" +
+                        "idc INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "nome TEXT NOT NULL, " +
+                        "email TEXT NOT NULL UNIQUE, " +
+                        "endereco TEXT, " +
+                        "telefone TEXT)");
+
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS tb_ferramenta (" +
+                        "idf INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "nome TEXT NOT NULL, " +
+                        "marca TEXT, " +
+                        "valor REAL NOT NULL, " +
+                        "setor TEXT, " +
+                        "estoque INTEGER NOT NULL)");
+
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS tb_emprestimo (" +
+                        "ide INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "quantidade INTEGER NOT NULL, " +
+                        "dataloc TEXT NOT NULL, " +
+                        "datadev TEXT, " +
+                        "status TEXT NOT NULL, " +
+                        "idc INTEGER NOT NULL, " +
+                        "idf INTEGER NOT NULL, " +
+                        "FOREIGN KEY (idc) REFERENCES tb_cliente (idc), " +
+                        "FOREIGN KEY (idf) REFERENCES tb_ferramenta (idf))");
+
+                stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_idc ON tb_emprestimo (idc)");
+                stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_idf ON tb_emprestimo (idf)");
+            }
 
             return connection;
-        } catch (SQLException e) {
-            System.err.println("Erro ao obter conexão de teste com SQLite: " + e.getMessage());
-            throw e;
-        }
-    }
-
-    private static void createTestTables(Connection conn) throws SQLException {
-        String sqlFerramenta = "CREATE TABLE IF NOT EXISTS tb_ferramenta (" +
-                "idf INTEGER PRIMARY KEY, " +
-                "nome VARCHAR(255) NOT NULL, " +
-                "marca VARCHAR(255), " +
-                "valor REAL, " +
-                "setor VARCHAR(255), " +
-                "estoque INTEGER);";
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(sqlFerramenta);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("SQLite JDBC driver not found.", e);
         }
     }
 }
