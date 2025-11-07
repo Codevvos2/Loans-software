@@ -42,4 +42,18 @@ class TestCliente {
         assertEquals("Rua das Flores, 123", cliente.getEndereco());
         assertEquals("(11) 98765-4321", cliente.getTelefone());
     }
+    @Test
+    void testToStringContainsFields() {
+        cliente.setNome("João da Silva");
+        cliente.setEmail("joao@email.com");
+        cliente.setEndereco("Rua das Flores, 123");
+        cliente.setTelefone("(11) 98765-4321");
+
+        String texto = cliente.toString();
+
+        assertTrue(texto.contains("Nome"));
+        assertTrue(texto.contains("Email"));
+        assertTrue(texto.contains("Endereco"));
+        assertTrue(texto.contains("Telefone"));
+    }
 }
