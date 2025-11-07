@@ -56,4 +56,14 @@ class TestCliente {
         assertTrue(texto.contains("Endereco"));
         assertTrue(texto.contains("Telefone"));
     }
+    @Test
+    void testConstrutorComParametros() {
+        Cliente c = new Cliente(1, "Maria Oliveira", "maria@email.com", "Av. Brasil, 456", "(21) 91234-5678");
+
+        assertEquals(1, c.getIdc());
+        assertEquals("Maria Oliveira", c.getNome());
+        assertEquals("maria@email.com", c.getEmail());
+        assertEquals("Av. Brasil, 456", c.getEndereco());
+        assertEquals("(21) 91234-5678", c.getTelefone());
+    }
 }
