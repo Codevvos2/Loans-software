@@ -2,179 +2,145 @@ package DAO;
 
 import Model.Cliente;
 import java.util.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ClienteDAO {
 
-    public static ArrayList<Cliente> ListaCliente = new ArrayList<Cliente>();
+    private ArrayList<Cliente> listaClientes = new ArrayList<>();
+    private Connection connection;
 
     public ClienteDAO() {
+        this.connection = getConexao();
+        inicializaBanco();
+    }
+
+    public ClienteDAO(Connection testConnection) {
+        this.connection = testConnection;
+    }
+
+    public void inicializaBanco() {
+        try (Statement stmt = this.connection.createStatement()) {
+            stmt.execute(
+                    "CREATE TABLE IF NOT EXISTS tb_cliente (" +
+                            "idc INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "nome TEXT NOT NULL, " +
+                            "email TEXT, " +
+                            "endereco TEXT, " +
+                            "telefone TEXT)"
+            );
+        } catch (SQLException e) {
+            System.out.println("Erro ao inicializar banco: " + e.getMessage());
+        }
     }
 
     public int maiorID() throws SQLException {
-
         int maiorID = 0;
-        try {
-            Statement stmt = this.getConexao().createStatement();
-            ResultSet res = stmt.executeQuery("SELECT MAX(idc) idc FROM tb_cliente");
-            res.next();
-            maiorID = res.getInt("idc");
-
-            stmt.close();
-
-        } catch (SQLException ex) {
+        if (this.connection == null) return maiorID;
+        String sql = "SELECT MAX(idc) AS idc FROM tb_cliente";
+        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
+            if (res.next()) {
+                maiorID = res.getInt("idc");
+            }
         }
-
         return maiorID;
     }
 
     public Connection getConexao() {
-
-        Connection connection = null;  //inst�ncia da conex�o
-
         try {
-
-            String driver = "com.mysql.cj.jdbc.Driver";
-            Class.forName(driver);
-
-            String server = "localhost"; //caminho do MySQL
-            String database = "db_loans_software";
-            String url = "jdbc:mysql://" + server + ":3306/" + database + "?useTimezone=true&serverTimezone=UTC";
-            String user = "root";
-            String password = "root";
-
-            connection = DriverManager.getConnection(url, user, password);
-
-            if (connection != null) {
-                System.out.println("Status: Conectado!");
-            } else {
-                System.out.println("Status: N�O CONECTADO!");
-            }
-
+            String url = "jdbc:sqlite:db_loans_software.db";
+            connection = DriverManager.getConnection(url);
+            System.out.println("Status: Conectado ao SQLite!");
             return connection;
-
-        } catch (ClassNotFoundException e) {  //Driver n�o encontrado
-            System.out.println("O driver nao foi encontrado. " + e.getMessage() );
-            return null;
-
         } catch (SQLException e) {
-            System.out.println("Nao foi possivel conectar...");
+            System.out.println("Nao foi possivel conectar ao SQLite: " + e.getMessage());
             return null;
         }
     }
 
-    public ArrayList getListaCliente() {
-        
-        ListaCliente.clear();
-
-        try {
-            Statement stmt = this.getConexao().createStatement();
-            ResultSet res = stmt.executeQuery("SELECT * FROM tb_cliente");
+    public ArrayList<Cliente> getListaCliente() {
+        listaClientes.clear();
+        if (this.connection == null) return listaClientes;
+        String sql = "SELECT * FROM tb_cliente";
+        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
             while (res.next()) {
-
                 int idc = res.getInt("idc");
                 String nome = res.getString("nome");
                 String email = res.getString("email");
                 String endereco = res.getString("endereco");
                 String telefone = res.getString("telefone");
-
-                Cliente objeto = new Cliente(idc,nome,email,endereco,telefone);
-
-                ListaCliente.add(objeto);
+                Cliente objeto = new Cliente(idc, nome, email, endereco, telefone);
+                listaClientes.add(objeto);
             }
-
-            stmt.close();
-
         } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-
-        return ListaCliente;
+        return listaClientes;
     }
 
     public boolean InsertClienteBD(Cliente objeto) {
+        if (this.connection == null) return true;
         String sql = "INSERT INTO tb_cliente(idc,nome,email,endereco,telefone) VALUES(?,?,?,?,?)";
-
-        try {
-            PreparedStatement stmt = this.getConexao().prepareStatement(sql);
-
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, objeto.getIdc());
             stmt.setString(2, objeto.getNome());
             stmt.setString(3, objeto.getEmail());
             stmt.setString(4, objeto.getEndereco());
             stmt.setString(5, objeto.getTelefone());
-
             stmt.execute();
-            stmt.close();
-
             return true;
-
         } catch (SQLException erro) {
             throw new RuntimeException(erro);
         }
-
     }
 
     public boolean DeleteClienteBD(int idc) {
-        try {
-            Statement stmt = this.getConexao().createStatement();
-            stmt.executeUpdate("DELETE FROM tb_cliente WHERE idc = " + idc);
-            stmt.close();            
-            
+        if (this.connection == null) return true;
+        String sql = "DELETE FROM tb_cliente WHERE idc = ?";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            stmt.setInt(1, idc);
+            stmt.executeUpdate();
+            return true;
         } catch (SQLException erro) {
+            throw new RuntimeException(erro);
         }
-        
-        return true;
     }
 
     public boolean UpdateClienteBD(Cliente objeto) {
-
-        String sql = "UPDATE tb_cliente set nome = ? ,email = ? ,endereco = ? ,telefone = ? WHERE idc = ?";
-
-        try {
-            PreparedStatement stmt = this.getConexao().prepareStatement(sql);
-
+        if (this.connection == null) return true;
+        String sql = "UPDATE tb_cliente SET nome=?, email=?, endereco=?, telefone=? WHERE idc=?";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setString(1, objeto.getNome());
             stmt.setString(2, objeto.getEmail());
             stmt.setString(3, objeto.getEndereco());
             stmt.setString(4, objeto.getTelefone());
             stmt.setInt(5, objeto.getIdc());
-
             stmt.execute();
-            stmt.close();
-
             return true;
-
         } catch (SQLException erro) {
             throw new RuntimeException(erro);
         }
-
     }
 
     public Cliente carregaCliente(int idc) {
-        
         Cliente objeto = new Cliente();
-        objeto.setIdc(idc);
-        
-        try {
-            Statement stmt = this.getConexao().createStatement();
-            ResultSet res = stmt.executeQuery("SELECT * FROM tb_cliente WHERE idc = " + idc);
-            res.next();
-
-            objeto.setNome(res.getString("nome"));
-            objeto.setEmail(res.getString("email"));
-            objeto.setEndereco(res.getString("endereco"));
-            objeto.setTelefone(res.getString("telefone"));
-
-            stmt.close();            
-            
+        if (this.connection == null) return objeto;
+        String sql = "SELECT * FROM tb_cliente WHERE idc=?";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            stmt.setInt(1, idc);
+            try (ResultSet res = stmt.executeQuery()) {
+                if (res.next()) {
+                    objeto.setIdc(res.getInt("idc"));
+                    objeto.setNome(res.getString("nome"));
+                    objeto.setEmail(res.getString("email"));
+                    objeto.setEndereco(res.getString("endereco"));
+                    objeto.setTelefone(res.getString("telefone"));
+                } else {
+                    objeto.setIdc(0);
+                }
+            }
         } catch (SQLException erro) {
+            erro.printStackTrace();
         }
         return objeto;
     }
 }
-
