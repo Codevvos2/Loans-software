@@ -68,8 +68,8 @@ class TestCliente {
     }
     @Test
     void testGetListaCliente() {
-        ArrayList<String> lista = new ArrayList<>();
-        lista.add("Cliente 1");
+        ArrayList<Cliente> lista = new ArrayList<>();
+        lista.add(new Cliente(1, "João Teste", "email@teste.com", "Rua Teste", "99999999"));
 
         when(daoMock.getListaCliente()).thenReturn(lista);
 
