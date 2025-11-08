@@ -3,9 +3,11 @@ package DAO;
 import Model.Cliente;
 import java.util.*;
 import java.sql.*;
+import java.util.logging.Logger;
 
 public class ClienteDAO {
 
+    private static final Logger logger = Logger.getLogger(ClienteDAO.class.getName());
     private ArrayList<Cliente> listaClientes = new ArrayList<>();
     private Connection connection;
 
@@ -72,7 +74,7 @@ public class ClienteDAO {
                 listaClientes.add(objeto);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.severe("Erro ao buscar lista de clientes: " + ex.getMessage());
         }
         return listaClientes;
     }
@@ -139,7 +141,7 @@ public class ClienteDAO {
                 }
             }
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            logger.severe("Erro ao carregar cliente: " + erro.getMessage());
         }
         return objeto;
     }

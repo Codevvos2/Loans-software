@@ -4,9 +4,11 @@ import Model.Emprestimo;
 
 import java.util.*;
 import java.sql.*;
+import java.util.logging.Logger;
 
 public class EmprestimoDAO {
 
+    private static final Logger logger = Logger.getLogger(EmprestimoDAO.class.getName());
     private ArrayList<Emprestimo> listaEmprestimos = new ArrayList<>();
     private Connection connection;
 
@@ -76,7 +78,7 @@ public class EmprestimoDAO {
                 listaEmprestimos.add(objeto);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.severe("Erro ao listar empréstimos: " + ex.getMessage());
         }
         return listaEmprestimos;
     }
@@ -149,7 +151,7 @@ public class EmprestimoDAO {
                 }
             }
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            logger.severe("Erro ao carregar empréstimo: " + erro.getMessage());
         }
         return objeto;
     }
