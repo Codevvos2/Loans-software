@@ -8,6 +8,16 @@
 
 name: Integração continua de Java com Maven
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  id-token: write
+  pull-requests: write
+  issues: write
+  checks: write
+  statuses: write
+  
 on:
   push:
     branches: [ "main" ]
