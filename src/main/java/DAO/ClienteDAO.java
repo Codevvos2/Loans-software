@@ -5,22 +5,23 @@ import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;
 
-public class ClienteDAO {
-
+public class ClienteDAO extends BaseDAO {
     private static final Logger logger = Logger.getLogger(ClienteDAO.class.getName());
     private ArrayList<Cliente> listaClientes = new ArrayList<>();
-    private Connection connection;
 
     public ClienteDAO() {
-        this.connection = getConexao();
-        inicializaBanco();
+        super();
+        if (this.connection != null) {
+            inicializaBanco();
+        }
     }
 
     public ClienteDAO(Connection testConnection) {
-        this.connection = testConnection;
+        super(testConnection);
     }
 
     public void inicializaBanco() {
+        if (this.connection == null) return;
         try (Statement stmt = this.connection.createStatement()) {
             stmt.execute(
                     "CREATE TABLE IF NOT EXISTS tb_cliente (" +
@@ -31,32 +32,12 @@ public class ClienteDAO {
                             "telefone TEXT)"
             );
         } catch (SQLException e) {
-            System.out.println("Erro ao inicializar banco: " + e.getMessage());
+            logger.severe("Erro ao inicializar banco tb_cliente: " + e.getMessage());
         }
     }
 
     public int maiorID() throws SQLException {
-        int maiorID = 0;
-        if (this.connection == null) return maiorID;
-        String sql = "SELECT MAX(idc) AS idc FROM tb_cliente";
-        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
-            if (res.next()) {
-                maiorID = res.getInt("idc");
-            }
-        }
-        return maiorID;
-    }
-
-    public Connection getConexao() {
-        try {
-            String url = "jdbc:sqlite:db_loans_software.db";
-            connection = DriverManager.getConnection(url);
-            System.out.println("Status: Conectado ao SQLite!");
-            return connection;
-        } catch (SQLException e) {
-            System.out.println("Nao foi possivel conectar ao SQLite: " + e.getMessage());
-            return null;
-        }
+        return maiorID("tb_cliente", "idc");
     }
 
     public ArrayList<Cliente> getListaCliente() {

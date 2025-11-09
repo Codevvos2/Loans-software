@@ -85,15 +85,15 @@ public class TestFerramentaDAO {
     }
 
     @Test
-    void testD_InsertDuplicado_ShouldFail() {
+    void testD_InsertDuplicado_ShouldPass() {
         Ferramenta f1 = new Ferramenta(0, NOME_TESTE, "Marca", 50.00, "Setor", 10);
         dao.InsertFerramentaBD(f1);
 
         Ferramenta f2 = new Ferramenta(0, NOME_TESTE, "Marca", 60.00, "Setor", 5);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertDoesNotThrow(() -> {
             dao.InsertFerramentaBD(f2);
-        }, "A inserção de nome duplicado deve lançar uma exceção de Runtime.");
+        }, "A inserção de nome duplicado deve ser permitida.");
     }
 
     @Test

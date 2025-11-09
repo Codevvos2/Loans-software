@@ -1,64 +1,42 @@
 package DAO;
-
 import Model.Ferramenta;
-
 import java.util.*;
 import java.sql.*;
+import java.util.logging.Logger;
 
-public class FerramentaDAO {
-
+public class FerramentaDAO extends BaseDAO {
+    private static final Logger logger = Logger.getLogger(FerramentaDAO.class.getName());
     private ArrayList<Ferramenta> listaFerramentas = new ArrayList<>();
-    private Connection connection;
 
     public FerramentaDAO() {
-        this.connection = getConexao();
+        super();
         if (this.connection != null) {
             inicializaBanco();
         }
     }
 
     public FerramentaDAO(Connection testConnection) {
-        this.connection = testConnection;
+        super(testConnection);
     }
 
     public void inicializaBanco() {
+        if (this.connection == null) return;
         try (Statement stmt = this.connection.createStatement()) {
-            stmt.execute("CREATE TABLE IF NOT EXISTS tb_ferramenta (idf INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL UNIQUE, marca TEXT, valor REAL, setor TEXT, estoque INTEGER)");
-
+            stmt.execute("CREATE TABLE IF NOT EXISTS tb_ferramenta (" +
+                    "idf INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "nome TEXT NOT NULL, " +
+                    "marca TEXT, " +
+                    "valor REAL, " +
+                    "setor TEXT, " +
+                    "estoque INTEGER)");
         } catch (SQLException e) {
-            System.out.println("Erro ao inicializar banco: " + e.getMessage());
+            logger.severe("Erro ao inicializar banco tb_ferramenta: " + e.getMessage());
         }
     }
 
     public int maiorID() throws SQLException {
-        int maiorID = 0;
-        if (this.connection == null) return maiorID;
-        String sql = "SELECT MAX(idf) AS idf FROM tb_ferramenta";
-        try (Statement stmt = this.connection.createStatement(); ResultSet res = stmt.executeQuery(sql)) {
-            if (res.next()) {
-                maiorID = res.getInt("idf");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return maiorID;
+        return maiorID("tb_ferramenta", "idf");
     }
-
-    public Connection getConexao() {
-        if (connection != null) {
-            return connection;
-        }
-        try {
-            String url = "jdbc:sqlite:db_loans_software.db";
-            connection = DriverManager.getConnection(url);
-            System.out.println("Status: Conectado ao SQLite!");
-        } catch (SQLException e) {
-            System.out.println("Não foi possível conectar ao SQLite: " + e.getMessage());
-            connection = null;
-        }
-        return connection;
-    }
-
 
     public ArrayList<Ferramenta> getListaFerramenta() {
         listaFerramentas.clear();
@@ -76,7 +54,7 @@ public class FerramentaDAO {
                 listaFerramentas.add(objeto);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.severe("Erro ao listar ferramentas: " + ex.getMessage());
         }
         return listaFerramentas;
     }
@@ -90,22 +68,19 @@ public class FerramentaDAO {
             stmt.setDouble(3, objeto.getValor());
             stmt.setString(4, objeto.getSetor());
             stmt.setInt(5, objeto.getEstoque());
-
             stmt.executeUpdate();
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    objeto.setIdf(generatedKeys.getInt(1)); // ⚡ coloca o ID gerado no objeto
+                    objeto.setIdf(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Inserção falhou, nenhum ID gerado.");
                 }
             }
-
             return true;
         } catch (SQLException erro) {
             throw new RuntimeException(erro);
         }
     }
-
 
     public boolean DeleteFerramentaBD(int idf) {
         if (this.connection == null) return true;
@@ -155,7 +130,7 @@ public class FerramentaDAO {
                 }
             }
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            logger.severe("Erro ao carregar ferramenta: " + erro.getMessage());
         }
         return objeto;
     }
