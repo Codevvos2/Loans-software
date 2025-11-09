@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.sql.DriverManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,10 +16,16 @@ public class TestFerramentaDAO {
     private static final String NOME_TESTE = "Martelo de Teste";
 
     @BeforeEach
-    void setup() throws SQLException {
-        Connection testConn = TestConnectionFactory.getTestConnection();
-        dao = new FerramentaDAO(testConn);
-        dao.DeleteFerramentaBD(ID_TESTE);
+    void setup() {
+        String url = "jdbc:sqlite::memory:";
+        Connection conexao = null;
+        try {
+            conexao = DriverManager.getConnection(url);
+            dao = new FerramentaDAO(conexao);
+            dao.inicializaBanco();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterEach
@@ -34,7 +41,7 @@ public class TestFerramentaDAO {
 
         assertTrue(resultado, "A inserção deve retornar TRUE em caso de sucesso.");
 
-        Ferramenta f_recuperada = dao.carregaFerramenta(ID_TESTE);
+        Ferramenta f_recuperada = dao.carregaFerramenta(f.getIdf());
         assertNotNull(f_recuperada, "A ferramenta deve ser recuperada do banco após a inserção.");
         assertEquals(NOME_TESTE, f_recuperada.getNome(), "O nome recuperado deve ser igual ao nome inserido.");
     }
@@ -44,7 +51,7 @@ public class TestFerramentaDAO {
         Ferramenta f_original = new Ferramenta(ID_TESTE, NOME_TESTE, "Marca Antiga", 10.00, "Setor", 1);
         dao.InsertFerramentaBD(f_original);
 
-        Ferramenta f_carregada = dao.carregaFerramenta(ID_TESTE);
+        Ferramenta f_carregada = dao.carregaFerramenta(f_original.getIdf());
         final double NOVO_VALOR = 99.99;
         final String NOVA_MARCA = "Marca Nova LTDA";
 
@@ -55,7 +62,7 @@ public class TestFerramentaDAO {
 
         assertTrue(resultado, "A atualização deve retornar TRUE em caso de sucesso.");
 
-        Ferramenta f_verificada = dao.carregaFerramenta(ID_TESTE);
+        Ferramenta f_verificada = dao.carregaFerramenta(f_carregada.getIdf());
 
         assertEquals(NOVO_VALOR, f_verificada.getValor(), 0.001, "O Valor deve ser atualizado no banco.");
         assertEquals(NOVA_MARCA, f_verificada.getMarca(), "A Marca deve ser atualizada no banco.");
@@ -79,14 +86,14 @@ public class TestFerramentaDAO {
 
     @Test
     void testD_InsertDuplicado_ShouldFail() {
-        Ferramenta f1 = new Ferramenta(ID_TESTE, NOME_TESTE, "Marca", 50.00, "Setor", 10);
+        Ferramenta f1 = new Ferramenta(0, NOME_TESTE, "Marca", 50.00, "Setor", 10);
         dao.InsertFerramentaBD(f1);
 
-        Ferramenta f2 = new Ferramenta(ID_TESTE, "Nome Duplicado", "Marca", 60.00, "Setor", 5);
+        Ferramenta f2 = new Ferramenta(0, NOME_TESTE, "Marca", 60.00, "Setor", 5);
 
         assertThrows(RuntimeException.class, () -> {
             dao.InsertFerramentaBD(f2);
-        }, "A inserção de ID duplicado deve lançar uma exceção de Runtime.");
+        }, "A inserção de nome duplicado deve lançar uma exceção de Runtime.");
     }
 
     @Test
@@ -105,15 +112,14 @@ public class TestFerramentaDAO {
 
     @Test
     void testD_ListagemEMaiorID_Success() throws SQLException {
-        Ferramenta f1 = new Ferramenta(1000, "Ferramenta 1", "M", 10.0, "S", 1);
-        Ferramenta f2 = new Ferramenta(1001, "Ferramenta 2", "M", 20.0, "S", 2);
+        Ferramenta f1 = new Ferramenta(0, "Ferramenta 1", "M", 10.0, "S", 1);
+        Ferramenta f2 = new Ferramenta(0, "Ferramenta 2", "M", 20.0, "S", 2);
         dao.InsertFerramentaBD(f1);
         dao.InsertFerramentaBD(f2);
 
-        assertEquals(1001, dao.maiorID(), "O maior ID deve ser o último item inserido.");
+        assertEquals(f2.getIdf(), dao.maiorID(), "O maior ID deve ser o último item inserido.");
 
         ArrayList<Ferramenta> lista = dao.getListaFerramenta();
-
         assertTrue(lista.size() >= 2, "A lista deve conter ao menos os dois itens inseridos.");
 
         dao.DeleteFerramentaBD(1000);

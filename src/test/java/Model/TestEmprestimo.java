@@ -60,8 +60,8 @@ class TestEmprestimo {
 
     @Test
     void testGetListaEmprestimo() {
-        ArrayList<String> lista = new ArrayList<>();
-        lista.add("Emprestimo 1");
+        ArrayList<Emprestimo> lista = new ArrayList<>();
+        lista.add(new Emprestimo("2025-10-01", "2025-11-01", "ativo"));
 
         when(daoMock.getListaEmprestimo()).thenReturn(lista);
 
