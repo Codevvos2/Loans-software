@@ -21,6 +21,9 @@ O projeto consiste na **otimização de um sistema legado em Java**, aplicando p
 - Java 17  
 - Maven  
 - Banco de dados SQL Lite
+- Jacoco
+- SonarCloud
+- Junit
 
 ## Integrantes
 
