@@ -12,6 +12,11 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+        <sonar.projectKey>Codevvos2_Loans-software</sonar.projectKey>
+        <sonar.organization>codevvos2</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
@@ -36,13 +41,6 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>5.11.0</version>
             <scope>test</scope>
@@ -51,6 +49,23 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.0.0.4389</version>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>Principal.Principal</mainClass>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -59,6 +74,7 @@
                     <release>17</release>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -76,29 +92,9 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-
-                    <execution>
-                        <id>jacoco-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>PACKAGE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.9</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

@@ -16,6 +16,7 @@ public class Cliente extends Pessoa {
         this.dao = new ClienteDAO(); // inicializado não importa em qual construtor
     }
 
+
     // Método Construtor de Objeto, inserindo dados
     public Cliente(String endereco, String telefone) {
         this.endereco = endereco;

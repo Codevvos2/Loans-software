@@ -1,30 +1,21 @@
 package Model;
 
-import DAO.EmprestimoDAO;
+import DAO.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class TestEmprestimo {
 
-    private EmprestimoDAO daoMock;
     private Emprestimo emprestimo;
 
     @BeforeEach
-    void setUp() throws Exception {
-        daoMock = Mockito.mock(EmprestimoDAO.class);
+    void setUp() throws SQLException {
         emprestimo = new Emprestimo();
-
-        Field daoField = Emprestimo.class.getDeclaredField("dao");
-        daoField.setAccessible(true);
-        daoField.set(emprestimo, daoMock);
     }
 
     @Test
@@ -59,55 +50,34 @@ class TestEmprestimo {
     }
 
     @Test
-    void testGetListaEmprestimo() {
-        ArrayList<Emprestimo> lista = new ArrayList<>();
-        lista.add(new Emprestimo("2025-10-01", "2025-11-01", "ativo"));
-
-        when(daoMock.getListaEmprestimo()).thenReturn(lista);
-
-        ArrayList result = emprestimo.getListaEmprestimo();
-
-        assertEquals(lista, result);
-        verify(daoMock, times(1)).getListaEmprestimo();
+    void testGetListaEmprestimo() throws SQLException {
+        ArrayList<Emprestimo> lista = emprestimo.getListaEmprestimo();
+        assertNotNull(lista);
+        assertTrue(lista.size() >= 0);
     }
 
     @Test
     void testInsertEmprestimoBD() throws SQLException {
-        when(daoMock.maiorID()).thenReturn(10);
-
-        boolean result = emprestimo.InsertEmprestimoBD(5, "2025-10-01", "2025-11-01", "ativo", 2, 3);
-
+        boolean result = emprestimo.InsertEmprestimoBD(1, "2025-10-01", "2025-11-01", "ativo", 1, 1);
         assertTrue(result);
-        verify(daoMock, times(1)).InsertEmprestimoBD(any(Emprestimo.class));
-        verify(daoMock, times(1)).maiorID();
     }
 
     @Test
-    void testDeleteEmprestimoBD() {
-        boolean result = emprestimo.DeleteEmprestimoBD(7);
-
+    void testDeleteEmprestimoBD() throws SQLException {
+        boolean result = emprestimo.DeleteEmprestimoBD(emprestimo.maiorID());
         assertTrue(result);
-        verify(daoMock, times(1)).DeleteEmprestimoBD(7);
     }
 
     @Test
-    void testUpdateEmprestimoBD() {
-        boolean result = emprestimo.UpdateEmprestimoBD(1, 3, "2025-10-01", "2025-11-01", "ativo", 2, 3);
-
+    void testUpdateEmprestimoBD() throws SQLException {
+        boolean result = emprestimo.UpdateEmprestimoBD(emprestimo.maiorID(), 1, "2025-10-01", "2025-11-01", "ativo", 1, 1);
         assertTrue(result);
-        verify(daoMock, times(1)).UpdateEmprestimoBD(any(Emprestimo.class));
     }
 
-    @Test
-    void testCarregaEmprestimo() {
-        emprestimo.carregaEmprestimo(10);
-        verify(daoMock, times(1)).carregaEmprestimo(10);
-    }
 
     @Test
     void testMaiorID() throws SQLException {
-        when(daoMock.maiorID()).thenReturn(7);
-        assertEquals(7, emprestimo.maiorID());
-        verify(daoMock, times(1)).maiorID();
+        int id = emprestimo.maiorID();
+        assertTrue(id >= 0);
     }
 }

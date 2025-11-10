@@ -1,10 +1,9 @@
 package Model;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestFerramenta {
 
@@ -17,9 +16,8 @@ public class TestFerramenta {
 
     @Test
     void testSettersEGettersECoberturaTotal() throws SQLException {
-
         Ferramenta f = new Ferramenta();
-        assertNotNull(f, "O objeto Ferramenta não deve ser nulo.");
+        assertNotNull(f);
 
         f.setIdf(ID_PADRAO);
         f.setNome(NOME_PADRAO);
@@ -28,20 +26,19 @@ public class TestFerramenta {
         f.setSetor(SETOR_PADRAO);
         f.setEstoque(ESTOQUE_PADRAO);
 
-        assertEquals(ID_PADRAO, f.getIdf(), "Getter de ID falhou.");
-        assertEquals(NOME_PADRAO, f.getNome(), "Getter de Nome falhou.");
-        assertEquals(MARCA_PADRAO, f.getMarca(), "Getter de Marca falhou.");
-        assertEquals(VALOR_PADRAO, f.getValor(), 0.001, "Getter de Valor falhou.");
-        assertEquals(SETOR_PADRAO, f.getSetor(), "Getter de Setor falhou.");
-        assertEquals(ESTOQUE_PADRAO, f.getEstoque(), "Getter de Estoque falhou.");
+        assertEquals(ID_PADRAO, f.getIdf());
+        assertEquals(NOME_PADRAO, f.getNome());
+        assertEquals(MARCA_PADRAO, f.getMarca());
+        assertEquals(VALOR_PADRAO, f.getValor(), 0.001);
+        assertEquals(SETOR_PADRAO, f.getSetor());
+        assertEquals(ESTOQUE_PADRAO, f.getEstoque());
 
         String representacao = f.toString();
-        assertTrue(representacao.contains(NOME_PADRAO), "O toString deve incluir o nome.");
+        assertTrue(representacao.contains(NOME_PADRAO));
 
-        assertNotNull(f.getListaFerramenta(), "A lista deve ser inicializada.");
+        assertNotNull(f.getListaFerramenta());
         f.maiorID();
         f.carregaFerramenta(ID_PADRAO);
-
         f.InsertFerramentaBD("Novo", "M", 10.0, "S", 1);
         f.DeleteFerramentaBD(ID_PADRAO);
         f.UpdateFerramentaBD(ID_PADRAO, "NovoNome", "M", 10.0, "S", 1);
@@ -49,14 +46,12 @@ public class TestFerramenta {
 
     @Test
     void testConstrutorCompleto() {
-        Ferramenta f = new Ferramenta(
-                ID_PADRAO, NOME_PADRAO, MARCA_PADRAO, VALOR_PADRAO, SETOR_PADRAO, ESTOQUE_PADRAO
-        );
-        assertEquals(ID_PADRAO, f.getIdf(), "ID deve ser igual.");
-        assertEquals(NOME_PADRAO, f.getNome(), "Nome deve ser igual.");
-        assertEquals(MARCA_PADRAO, f.getMarca(), "Marca deve ser igual.");
-        assertEquals(VALOR_PADRAO, f.getValor(), 0.001, "Valor deve ser igual.");
-        assertEquals(SETOR_PADRAO, f.getSetor(), "Setor deve ser igual.");
-        assertEquals(ESTOQUE_PADRAO, f.getEstoque(), "Estoque deve ser igual.");
+        Ferramenta f = new Ferramenta(ID_PADRAO, NOME_PADRAO, MARCA_PADRAO, VALOR_PADRAO, SETOR_PADRAO, ESTOQUE_PADRAO);
+        assertEquals(ID_PADRAO, f.getIdf());
+        assertEquals(NOME_PADRAO, f.getNome());
+        assertEquals(MARCA_PADRAO, f.getMarca());
+        assertEquals(VALOR_PADRAO, f.getValor(), 0.001);
+        assertEquals(SETOR_PADRAO, f.getSetor());
+        assertEquals(ESTOQUE_PADRAO, f.getEstoque());
     }
 }
