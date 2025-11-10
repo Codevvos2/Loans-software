@@ -125,4 +125,23 @@ public class TestFerramentaDAO {
         dao.DeleteFerramentaBD(1000);
         dao.DeleteFerramentaBD(1001);
     }
+
+    @Test
+    void testInicializaBancoComConnectionNull() {
+        FerramentaDAO daoNull = new FerramentaDAO((Connection) null);
+        assertDoesNotThrow(() -> daoNull.inicializaBanco(), "Inicializar banco com conexão nula não deve lançar exceção");
+    }
+
+    @Test
+    void testDeleteComConnectionNull() {
+        FerramentaDAO daoNull = new FerramentaDAO((Connection) null);
+        assertTrue(daoNull.DeleteFerramentaBD(1), "Delete deve retornar true mesmo se connection for null");
+    }
+
+    @Test
+    void testCarregaFerramentaInexistente() {
+        Ferramenta f = dao.carregaFerramenta(123456);
+        assertEquals(0, f.getIdf(), "ID de item inexistente deve ser 0");
+    }
+
 }
