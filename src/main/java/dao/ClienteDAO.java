@@ -111,18 +111,23 @@ public class ClienteDAO extends BaseDAO {
      * @throws RuntimeException Se ocorrer um erro ao inserir o cliente
      */
     public boolean InsertClienteBD(Cliente objeto) {
-        if (this.connection == null) return true;
-        String sql = "INSERT INTO tb_cliente(idc,nome,email,endereco,telefone) VALUES(?,?,?,?,?)";
+        if (this.connection == null) {
+            return false;
+        }
+        String sql = "INSERT INTO tb_cliente(idc, nome, email, endereco, telefone) VALUES(?, ?, ?, ?, ?)";
+
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, objeto.getIdc());
             stmt.setString(2, objeto.getNome());
             stmt.setString(3, objeto.getEmail());
             stmt.setString(4, objeto.getEndereco());
             stmt.setString(5, objeto.getTelefone());
-            stmt.execute();
-            return true;
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            System.err.println("Erro ao inserir cliente: " + erro.getMessage());
+            return false;
         }
     }
 
