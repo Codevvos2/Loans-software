@@ -5,10 +5,33 @@ import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;
 
+/**
+ * Classe responsável pelo acesso e manipulação dos dados da tabela {@code tb_cliente} no banco de dados.
+ * <p>
+ * Implementa operações CRUD (Create, Read, Update, Delete) para a entidade {@link Cliente}.
+ * Esta classe estende {@link BaseDAO} para utilizar a conexão com o banco de dados.
+ * </p>
+ *
+ * @author Artur Azambuja
+ * @author Gustavo Russeff
+ * @version 1.0
+ * @since 1.0
+ */
 public class ClienteDAO extends BaseDAO {
+
+    /**
+     * Logger para registro de mensagens e erros durante as operações no banco de dados.
+     */
     private static final Logger logger = Logger.getLogger(ClienteDAO.class.getName());
+
+    /**
+     * Lista utilizada para armazenar os objetos {@link Cliente} recuperados do banco de dados.
+     */
     private ArrayList<Cliente> listaClientes = new ArrayList<>();
 
+    /**
+     * Construtor padrão que inicializa a conexão com o banco e cria a tabela {@code tb_cliente} se necessário.
+     */
     public ClienteDAO() {
         super();
         if (this.connection != null) {
@@ -16,10 +39,19 @@ public class ClienteDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Construtor utilizado para testes, recebendo uma conexão específica.
+     *
+     * @param testConnection Conexão de banco de dados utilizada nos testes
+     */
     public ClienteDAO(Connection testConnection) {
         super(testConnection);
     }
 
+    /**
+     * Cria a tabela {@code tb_cliente} no banco de dados, caso ela ainda não exista.
+     * A tabela contém as colunas: idc, nome, email, endereco e telefone.
+     */
     public void inicializaBanco() {
         if (this.connection == null) return;
         try (Statement stmt = this.connection.createStatement()) {
@@ -36,10 +68,21 @@ public class ClienteDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Retorna o maior ID existente na tabela {@code tb_cliente}.
+     *
+     * @return O maior valor de ID encontrado
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public int maiorID() throws SQLException {
         return maiorID("tb_cliente", "idc");
     }
 
+    /**
+     * Retorna a lista de todos os clientes cadastrados na tabela {@code tb_cliente}.
+     *
+     * @return Uma lista de objetos {@link Cliente}
+     */
     public ArrayList<Cliente> getListaCliente() {
         listaClientes.clear();
         if (this.connection == null) return listaClientes;
@@ -60,6 +103,13 @@ public class ClienteDAO extends BaseDAO {
         return listaClientes;
     }
 
+    /**
+     * Insere um novo cliente no banco de dados.
+     *
+     * @param objeto Objeto {@link Cliente} a ser inserido
+     * @return {@code true} se a inserção for bem-sucedida
+     * @throws RuntimeException Se ocorrer um erro ao inserir o cliente
+     */
     public boolean InsertClienteBD(Cliente objeto) {
         if (this.connection == null) return true;
         String sql = "INSERT INTO tb_cliente(idc,nome,email,endereco,telefone) VALUES(?,?,?,?,?)";
@@ -76,6 +126,13 @@ public class ClienteDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Exclui um cliente da tabela {@code tb_cliente} com base em seu ID.
+     *
+     * @param idc ID do cliente a ser excluído
+     * @return {@code true} se a exclusão for bem-sucedida
+     * @throws RuntimeException Se ocorrer um erro durante a exclusão
+     */
     public boolean DeleteClienteBD(int idc) {
         if (this.connection == null) return true;
         String sql = "DELETE FROM tb_cliente WHERE idc = ?";
@@ -88,6 +145,13 @@ public class ClienteDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Atualiza os dados de um cliente existente no banco de dados.
+     *
+     * @param objeto Objeto {@link Cliente} contendo os novos dados
+     * @return {@code true} se a atualização for bem-sucedida
+     * @throws RuntimeException Se ocorrer um erro durante a atualização
+     */
     public boolean UpdateClienteBD(Cliente objeto) {
         if (this.connection == null) return true;
         String sql = "UPDATE tb_cliente SET nome=?, email=?, endereco=?, telefone=? WHERE idc=?";
@@ -104,6 +168,12 @@ public class ClienteDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Carrega um cliente específico do banco de dados com base em seu ID.
+     *
+     * @param idc ID do cliente a ser carregado
+     * @return Um objeto {@link Cliente} preenchido com os dados encontrados
+     */
     public Cliente carregaCliente(int idc) {
         Cliente objeto = new Cliente();
         if (this.connection == null) return objeto;

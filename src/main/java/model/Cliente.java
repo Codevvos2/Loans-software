@@ -4,52 +4,91 @@ import java.util.*;
 import dao.ClienteDAO;
 import java.sql.SQLException;
 
+/**
+ * Representa um cliente do sistema, herdando atributos básicos de {@link Pessoa}
+ * e adicionando informações específicas como endereço e telefone.
+ * <p>
+ * Esta classe também encapsula a comunicação com o banco de dados por meio do {@link ClienteDAO},
+ * simulando a camada de negócio (model) na arquitetura MVC.
+ * </p>
+ *
+ * @author Artur Azambuja
+ * @author Bernardo Gaussmann
+ * @version 1.0
+ * @since 1.0
+ */
 public class Cliente extends Pessoa {
 
-    // Atributos
+    /** Endereço do cliente. */
     private String endereco;
-    private String telefone;
-    private final ClienteDAO dao; 
 
-    // Método Construtor de Objeto Vazio
+    /** Telefone do cliente. */
+    private String telefone;
+
+    /** Objeto de acesso aos dados (DAO) responsável pelas operações no banco de dados. */
+    private final ClienteDAO dao;
+
+    /**
+     * Construtor padrão que inicializa o DAO.
+     */
     public Cliente() {
-        this.dao = new ClienteDAO(); // inicializado não importa em qual construtor
+        this.dao = new ClienteDAO();
     }
 
-
-    // Método Construtor de Objeto, inserindo dados
+    /**
+     * Construtor que inicializa os atributos endereço e telefone.
+     *
+     * @param endereco Endereço do cliente.
+     * @param telefone Telefone do cliente.
+     */
     public Cliente(String endereco, String telefone) {
         this.endereco = endereco;
         this.telefone = telefone;
-        this.dao = new ClienteDAO(); // inicializado não importa em qual construtor
+        this.dao = new ClienteDAO();
     }
 
-    // Método Construtor usando também o construtor da SUPERCLASSE
-    public Cliente(int idc,String nome,String email,String endereco,String telefone) {
+    /**
+     * Construtor completo que utiliza também o construtor da superclasse {@link Pessoa}.
+     *
+     * @param idc ID do cliente.
+     * @param nome Nome do cliente.
+     * @param email E-mail do cliente.
+     * @param endereco Endereço do cliente.
+     * @param telefone Telefone do cliente.
+     */
+    public Cliente(int idc, String nome, String email, String endereco, String telefone) {
         super(idc, nome, email);
         this.endereco = endereco;
         this.telefone = telefone;
-        this.dao = new ClienteDAO(); // inicializado não importa em qual construtor
+        this.dao = new ClienteDAO();
     }
 
-    // Métodos GET e SET
+    /** @return o endereço do cliente. */
     public String getEndereco() {
         return endereco;
     }
 
+    /** @param endereco define o endereço do cliente. */
     public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
 
+    /** @return o telefone do cliente. */
     public String getTelefone() {
         return telefone;
     }
 
+    /** @param telefone define o telefone do cliente. */
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
-    // Override necessário para poder retornar os dados de Pessoa no toString para Cliente.
+    /**
+     * Retorna uma representação textual do cliente.
+     * Inclui também os atributos herdados de {@link Pessoa}.
+     *
+     * @return String formatada com todos os dados do cliente.
+     */
     @Override
     public String toString() {
         return "\n ID: " + this.getIdc()
@@ -60,70 +99,77 @@ public class Cliente extends Pessoa {
                 + "\n -----------";
     }
 
-    /*
-    
-        ABAIXO OS M�TODOS PARA USO JUNTO COM O DAO
-        SIMULANDO A ESTRUTURA EM CAMADAS PARA USAR COM BANCOS DE DADOS.
-    
+    /**
+     * Retorna uma lista de todos os clientes cadastrados no banco de dados.
+     *
+     * @return {@link ArrayList} contendo objetos do tipo {@link Cliente}.
      */
-    // Retorna a Lista de Cliente(objetos)
     public ArrayList getListaCliente() {
-        //return AlunoDAO.MinhaLista;
         return dao.getListaCliente();
     }
 
-    // Cadastra novo Cliente
-
+    /**
+     * Insere um novo cliente no banco de dados.
+     *
+     * @param nome Nome do cliente.
+     * @param email Email do cliente.
+     * @param endereco Endereço do cliente.
+     * @param telefone Telefone do cliente.
+     * @return true se o cliente foi inserido com sucesso.
+     * @throws SQLException se ocorrer um erro ao acessar o banco de dados.
+     */
     public boolean InsertClienteBD(String nome, String email, String endereco, String telefone) throws SQLException {
         int idc = this.maiorID() + 1;
-        Cliente objeto = new Cliente(idc,nome,email,endereco,telefone);
-//        ClienteDAO.ListaCliente.add(objeto);
+        Cliente objeto = new Cliente(idc, nome, email, endereco, telefone);
         dao.InsertClienteBD(objeto);
         return true;
-
     }
 
-    // Deleta um cliente específico pelo seu campo ID
+    /**
+     * Exclui um cliente específico pelo seu ID.
+     *
+     * @param idc ID do cliente a ser removido.
+     * @return true se a exclusão for bem-sucedida.
+     */
     public boolean DeleteClienteBD(int idc) {
-//        int indice = this.procuraIndice(id);
-//        ClienteDAO.ListaCliente.remove(indice);
         dao.DeleteClienteBD(idc);
         return true;
     }
 
-    // Edita um Cliente específico pelo seu campo ID
-    public boolean UpdateClienteBD(int idc,String nome,String email,String endereco,String telefone) {
-        Cliente objeto = new Cliente(idc, nome, email, endereco,telefone);
-//        int indice = this.procuraIndice(id);
-//        ClienteDAO.ListaCliente.set(indice, objeto);
+    /**
+     * Atualiza os dados de um cliente no banco de dados.
+     *
+     * @param idc ID do cliente.
+     * @param nome Nome atualizado.
+     * @param email Email atualizado.
+     * @param endereco Endereço atualizado.
+     * @param telefone Telefone atualizado.
+     * @return true se a atualização for bem-sucedida.
+     */
+    public boolean UpdateClienteBD(int idc, String nome, String email, String endereco, String telefone) {
+        Cliente objeto = new Cliente(idc, nome, email, endereco, telefone);
         dao.UpdateClienteBD(objeto);
         return true;
     }
 
-    // procura o INDICE de objeto da ListaCliente que contem o ID enviado.
-//    private int procuraIndice(int id) {
-//        int indice = -1;
-//        for (int i = 0; i < ClienteDAO.ListaCliente.size(); i++) {
-//            if (ClienteDAO.ListaCliente.get(i).getId() == id) {
-//                indice = i;
-//            }
-//        }
-//        return indice;
-//    }
-
-    // carrega dados de um cliente especéfico pelo seu ID
+    /**
+     * Carrega os dados de um cliente específico pelo seu ID.
+     *
+     * @param idc ID do cliente.
+     * @return Objeto {@link Cliente} carregado do banco de dados.
+     */
     public Cliente carregaCliente(int idc) {
-//        int indice = this.procuraIndice(id);
-//        return ClienteDAO.ListaCliente.get(indice);
         dao.carregaCliente(idc);
         return null;
     }
-    
-    // retorna o maior ID da nossa base de dados
-        public int maiorID() throws SQLException{
-//    public int maiorID(){
-//        return ClienteDAO.maiorID();
-        return dao.maiorID();
-    }   
-}
 
+    /**
+     * Retorna o maior ID existente na tabela de clientes.
+     *
+     * @return o maior ID registrado.
+     * @throws SQLException se ocorrer erro no acesso ao banco de dados.
+     */
+    public int maiorID() throws SQLException {
+        return dao.maiorID();
+    }
+}

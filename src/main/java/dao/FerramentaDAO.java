@@ -1,13 +1,31 @@
 package dao;
+
 import model.Ferramenta;
 import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;
 
+/**
+ * Classe responsável pelo acesso e manipulação dos dados da entidade {@link Ferramenta}
+ * no banco de dados. Implementa operações CRUD e inicialização da tabela.
+ *
+ * Esta classe herda de {@link BaseDAO} para gerenciar a conexão com o banco.
+ *
+ * @author Artur Azambuja
+ * @author Gustavo Russeff
+ * @version 1.0
+ * @since 1.0
+ */
 public class FerramentaDAO extends BaseDAO {
+    /** Logger para registrar mensagens e erros da classe. */
     private static final Logger logger = Logger.getLogger(FerramentaDAO.class.getName());
+
+    /** Lista que armazena as ferramentas carregadas do banco de dados. */
     private ArrayList<Ferramenta> listaFerramentas = new ArrayList<>();
 
+    /**
+     * Construtor padrão. Inicializa a conexão e cria a tabela {@code tb_ferramenta} se necessário.
+     */
     public FerramentaDAO() {
         super();
         if (this.connection != null) {
@@ -15,10 +33,19 @@ public class FerramentaDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Construtor utilizado em testes para injetar uma conexão específica.
+     *
+     * @param testConnection conexão de banco de dados usada para testes
+     */
     public FerramentaDAO(Connection testConnection) {
         super(testConnection);
     }
 
+    /**
+     * Cria a tabela {@code tb_ferramenta} no banco de dados, caso ainda não exista.
+     * A tabela contém colunas para ID, nome, marca, valor, setor e estoque.
+     */
     public void inicializaBanco() {
         if (this.connection == null) return;
         try (Statement stmt = this.connection.createStatement()) {
@@ -34,10 +61,21 @@ public class FerramentaDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Retorna o maior ID registrado na tabela {@code tb_ferramenta}.
+     *
+     * @return maior identificador de ferramenta
+     * @throws SQLException caso ocorra erro na consulta
+     */
     public int maiorID() throws SQLException {
         return maiorID("tb_ferramenta", "idf");
     }
 
+    /**
+     * Retorna uma lista com todas as ferramentas registradas no banco.
+     *
+     * @return lista de objetos {@link Ferramenta}
+     */
     public ArrayList<Ferramenta> getListaFerramenta() {
         listaFerramentas.clear();
         if (this.connection == null) return listaFerramentas;
@@ -59,6 +97,12 @@ public class FerramentaDAO extends BaseDAO {
         return listaFerramentas;
     }
 
+    /**
+     * Insere uma nova ferramenta no banco de dados.
+     *
+     * @param objeto ferramenta a ser inserida
+     * @return {@code true} se a inserção for bem-sucedida
+     */
     public boolean InsertFerramentaBD(Ferramenta objeto) {
         if (this.connection == null) return false;
         String sql = "INSERT INTO tb_ferramenta(nome, marca, valor, setor, estoque) VALUES(?,?,?,?,?)";
@@ -82,6 +126,12 @@ public class FerramentaDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Exclui uma ferramenta do banco de dados com base no ID informado.
+     *
+     * @param idf identificador da ferramenta a ser excluída
+     * @return {@code true} se a exclusão for bem-sucedida
+     */
     public boolean DeleteFerramentaBD(int idf) {
         if (this.connection == null) return true;
         String sql = "DELETE FROM tb_ferramenta WHERE idf = ?";
@@ -94,6 +144,12 @@ public class FerramentaDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Atualiza os dados de uma ferramenta existente no banco de dados.
+     *
+     * @param objeto ferramenta com os dados atualizados
+     * @return {@code true} se a atualização for bem-sucedida
+     */
     public boolean UpdateFerramentaBD(Ferramenta objeto) {
         if (this.connection == null) return true;
         String sql = "UPDATE tb_ferramenta SET nome = ?, marca = ?, valor = ?, setor = ?, estoque = ? WHERE idf = ?";
@@ -111,6 +167,12 @@ public class FerramentaDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Carrega uma ferramenta específica do banco de dados com base no ID.
+     *
+     * @param idf identificador da ferramenta a ser carregada
+     * @return objeto {@link Ferramenta} correspondente ou uma ferramenta vazia se não encontrada
+     */
     public Ferramenta carregaFerramenta(int idf) {
         Ferramenta objeto = new Ferramenta();
         if (this.connection == null) return objeto;

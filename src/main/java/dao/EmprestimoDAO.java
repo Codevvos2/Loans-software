@@ -1,13 +1,39 @@
 package dao;
+
 import model.Emprestimo;
 import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;
 
+/**
+ * Classe responsável pelo acesso e manipulação dos dados da tabela {@code tb_emprestimo} no banco de dados.
+ * <p>
+ * Implementa operações CRUD (Create, Read, Update, Delete) para a entidade {@link Emprestimo}.
+ * Esta classe estende {@link BaseDAO}, utilizando seus recursos de conexão com o banco de dados.
+ * </p>
+ *
+ * <p>Revisado e documentado de acordo com o padrão Javadoc.</p>
+ *
+ * @author Artur Azambuja
+ * @author Gustavo Russeff
+ * @version 1.0
+ * @since 1.0
+ */
 public class EmprestimoDAO extends BaseDAO {
+
+    /**
+     * Logger utilizado para registrar mensagens e erros durante as operações com o banco de dados.
+     */
     private static final Logger logger = Logger.getLogger(EmprestimoDAO.class.getName());
+
+    /**
+     * Lista utilizada para armazenar os objetos {@link Emprestimo} recuperados do banco de dados.
+     */
     private ArrayList<Emprestimo> listaEmprestimos = new ArrayList<>();
 
+    /**
+     * Construtor padrão que inicializa a conexão e cria a tabela {@code tb_emprestimo} se necessário.
+     */
     public EmprestimoDAO() {
         super();
         if (this.connection != null) {
@@ -15,10 +41,29 @@ public class EmprestimoDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Construtor utilizado em testes, recebendo uma conexão específica.
+     *
+     * @param testConnection Conexão de banco de dados usada para testes
+     */
     public EmprestimoDAO(Connection testConnection) {
         super(testConnection);
     }
 
+    /**
+     * Cria a tabela {@code tb_emprestimo} no banco de dados caso ela ainda não exista.
+     * <p>
+     * A tabela contém as colunas:
+     * <ul>
+     *   <li>ide — identificador do empréstimo</li>
+     *   <li>quantidade — quantidade de itens emprestados</li>
+     *   <li>dataloc — data de locação</li>
+     *   <li>datadev — data de devolução</li>
+     *   <li>status — situação atual do empréstimo</li>
+     *   <li>idc — identificador do cliente</li>
+     *   <li>idf — identificador do funcionário</li>
+     * </ul>
+     */
     public void inicializaBanco() {
         if (this.connection == null) return;
         try (Statement stmt = this.connection.createStatement()) {
@@ -37,10 +82,21 @@ public class EmprestimoDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Retorna o maior ID existente na tabela {@code tb_emprestimo}.
+     *
+     * @return O maior valor de ID encontrado
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public int maiorID() throws SQLException {
         return maiorID("tb_emprestimo", "ide");
     }
 
+    /**
+     * Retorna uma lista de todos os empréstimos cadastrados na tabela {@code tb_emprestimo}.
+     *
+     * @return Uma lista contendo objetos {@link Emprestimo}
+     */
     public ArrayList<Emprestimo> getListaEmprestimo() {
         listaEmprestimos.clear();
         if (this.connection == null) return listaEmprestimos;
@@ -63,6 +119,13 @@ public class EmprestimoDAO extends BaseDAO {
         return listaEmprestimos;
     }
 
+    /**
+     * Insere um novo empréstimo no banco de dados.
+     *
+     * @param objeto Objeto {@link Emprestimo} a ser inserido
+     * @return {@code true} se a inserção for bem-sucedida
+     * @throws RuntimeException Se ocorrer um erro durante a operação
+     */
     public boolean InsertEmprestimoBD(Emprestimo objeto) {
         if (this.connection == null) return true;
         String sql = "INSERT INTO tb_emprestimo(ide,quantidade,dataloc,datadev,status,idc,idf) VALUES(?,?,?,?,?,?,?)";
@@ -81,6 +144,13 @@ public class EmprestimoDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Exclui um empréstimo do banco de dados com base no ID informado.
+     *
+     * @param ide ID do empréstimo a ser removido
+     * @return {@code true} se a exclusão for bem-sucedida
+     * @throws RuntimeException Se ocorrer um erro durante a exclusão
+     */
     public boolean DeleteEmprestimoBD(int ide) {
         if (this.connection == null) return true;
         String sql = "DELETE FROM tb_emprestimo WHERE ide = ?";
@@ -93,6 +163,13 @@ public class EmprestimoDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Atualiza os dados de um empréstimo existente no banco de dados.
+     *
+     * @param objeto Objeto {@link Emprestimo} contendo os novos valores
+     * @return {@code true} se a atualização for bem-sucedida
+     * @throws RuntimeException Se ocorrer um erro durante a atualização
+     */
     public boolean UpdateEmprestimoBD(Emprestimo objeto) {
         if (this.connection == null) return true;
         String sql = "UPDATE tb_emprestimo SET quantidade=?, dataloc=?, datadev=?, status=?, idc=?, idf=? WHERE ide=?";
@@ -111,6 +188,12 @@ public class EmprestimoDAO extends BaseDAO {
         }
     }
 
+    /**
+     * Carrega um empréstimo específico do banco de dados com base em seu ID.
+     *
+     * @param ide ID do empréstimo a ser carregado
+     * @return Objeto {@link Emprestimo} preenchido com os dados encontrados, ou um objeto vazio se não existir
+     */
     public Emprestimo carregaEmprestimo(int ide) {
         Emprestimo objeto = new Emprestimo();
         if (this.connection == null) return objeto;
