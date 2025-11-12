@@ -1,5 +1,5 @@
-package DAO;
-import Model.Ferramenta;
+package dao;
+import model.Ferramenta;
 import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;

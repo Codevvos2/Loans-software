@@ -1,6 +1,6 @@
-package DAO;
+package dao;
 
-import Model.Ferramenta;
+import model.Ferramenta;
 import org.junit.jupiter.api.*;;
 import java.sql.SQLException;
 import java.sql.Connection;

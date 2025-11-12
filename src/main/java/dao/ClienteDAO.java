@@ -1,6 +1,6 @@
-package DAO;
+package dao;
 
-import Model.Cliente;
+import model.Cliente;
 import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;

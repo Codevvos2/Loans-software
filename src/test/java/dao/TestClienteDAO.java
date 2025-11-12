@@ -1,6 +1,6 @@
-package DAO;
+package dao;
 
-import Model.Cliente;
+import model.Cliente;
 import org.junit.jupiter.api.*;
 import java.sql.SQLException;
 import java.util.ArrayList;

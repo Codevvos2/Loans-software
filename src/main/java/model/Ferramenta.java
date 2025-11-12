@@ -1,7 +1,7 @@
-package Model;
+package model;
 
 import java.util.*;
-import DAO.FerramentaDAO;
+import dao.FerramentaDAO;
 import java.sql.SQLException;
 import java.sql.Connection;
 

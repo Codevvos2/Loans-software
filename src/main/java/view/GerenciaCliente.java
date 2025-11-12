@@ -1,7 +1,6 @@
-package View;
+package view;
 
-import DAO.ClienteDAO;
-import Model.Cliente;
+import model.Cliente;
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;

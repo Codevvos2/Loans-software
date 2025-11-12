@@ -1,7 +1,7 @@
-package Model;
+package model;
 
 import java.util.*;
-import DAO.EmprestimoDAO;
+import dao.EmprestimoDAO;
 import java.sql.SQLException;
 
 public class Emprestimo extends EmprestimoAbstract {

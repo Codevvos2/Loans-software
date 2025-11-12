@@ -1,7 +1,7 @@
-package View;
+package view;
 
-import Model.Ferramenta;
-import DAO.FerramentaDAO;
+import model.Ferramenta;
+
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;

@@ -1,5 +1,5 @@
-package DAO;
-import Model.Emprestimo;
+package dao;
+import model.Emprestimo;
 import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;

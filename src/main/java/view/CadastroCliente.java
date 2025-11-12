@@ -1,7 +1,7 @@
-package View;
+package view;
 
-import Model.Cliente;
-import DAO.ClienteDAO;
+import model.Cliente;
+
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

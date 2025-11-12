@@ -1,6 +1,6 @@
-package DAO;
+package dao;
 
-import Model.Emprestimo;
+import model.Emprestimo;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;

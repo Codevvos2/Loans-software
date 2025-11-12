@@ -1,7 +1,7 @@
-package Model;
+package model;
 
 import java.util.*;
-import DAO.ClienteDAO;
+import dao.ClienteDAO;
 import java.sql.SQLException;
 
 public class Cliente extends Pessoa {

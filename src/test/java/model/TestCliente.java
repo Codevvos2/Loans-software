@@ -1,7 +1,7 @@
-package Model;
+package model;
 
-import DAO.ClienteDAO;
-import DAO.Database;
+import dao.ClienteDAO;
+import dao.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
