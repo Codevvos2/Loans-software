@@ -1,5 +1,10 @@
 # 💻 Loans Software – Projeto de Otimização
 
+[![Build](https://github.com/Codevvos2/Loans-software/actions/workflows/maven.yml/badge.svg)](https://github.com/Codevvos2/Loans-software/actions/workflows/maven.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Codevvos2_Loans-software&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Codevvos2_Loans-software)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Codevvos2_Loans-software&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Codevvos2_Loans-software)
+
+
 **Universidade do Sul de Santa Catarina – UNISUL**  
 **Unidade Curricular:** Gestão e Qualidade de Software  
 **Professor:** Osmar de Oliveira Braz Júnior  
@@ -13,9 +18,12 @@ O projeto consiste na **otimização de um sistema legado em Java**, aplicando p
 
 ## ⚙️ Tecnologias Utilizadas
 
-- Java 19  
+- Java 17  
 - Maven  
-- Banco de dados MySql
+- Banco de dados SQL Lite
+- Jacoco
+- SonarCloud
+- Junit
 
 ## Integrantes
 
