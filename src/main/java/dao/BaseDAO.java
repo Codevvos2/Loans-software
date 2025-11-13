@@ -70,6 +70,7 @@ public abstract class BaseDAO {
      */
 
     private static final Map<String, Set<String>> ALLOWED_IDENTIFIERS = Map.of(
+            "tb_cliente",    Set.of("idc", "nome", "telefone", "endereco", "email"),
             "tb_emprestimo", Set.of("ide", "quantidade", "dataloc", "datadev", "status", "idc", "idf"),
             "tb_ferramenta",  Set.of("idf", "nome", "marca", "valor", "setor", "estoque")
     );
