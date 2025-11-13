@@ -3,6 +3,7 @@ package dao;
 import model.Emprestimo;
 import java.util.*;
 import java.sql.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -40,6 +41,7 @@ public class EmprestimoDAO extends BaseDAO {
             inicializaBanco();
         }
     }
+    private static final Logger LOGGER = Logger.getLogger(EmprestimoDAO.class.getName());
 
     /**
      * Construtor utilizado em testes, recebendo uma conexão específica.
@@ -144,7 +146,7 @@ public class EmprestimoDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erro ao inserir empréstimo no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }
@@ -169,7 +171,7 @@ public class EmprestimoDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erro ao deletar empréstimo no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }
@@ -200,7 +202,7 @@ public class EmprestimoDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erro ao atualizar empréstimo no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }

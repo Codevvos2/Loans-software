@@ -146,7 +146,7 @@ public class FerramentaDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erro ao deletar ferramenta no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }
