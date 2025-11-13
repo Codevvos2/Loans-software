@@ -66,10 +66,7 @@ public abstract class BaseDAO {
      * @throws SQLException se ocorrer erro durante a consulta
      * @throws IllegalArgumentException se o nome da tabela ou campo for inválido
      */
-    protected int maiorID(String tabela, String campoID) throws SQLException {
-        int result = 0;
-        if (this.connection == null) return result;
-
+    public int maiorID(String tabela, String campoID) throws SQLException {
         if (!isSafeName(tabela) || !isSafeName(campoID)) {
             throw new IllegalArgumentException("Tabela ou campoID inválido");
         }
@@ -77,13 +74,14 @@ public abstract class BaseDAO {
         String sql = "SELECT MAX(" + campoID + ") AS max_id FROM " + tabela;
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                result = rs.getInt("max_id");
-            }
-        }
 
-        return result;
+            if (rs.next()) {
+                return rs.getInt("max_id");
+            }
+            return 0;
+        }
     }
+
 
     /**
      * Verifica se o nome informado (de tabela ou campo) é seguro para uso em SQL,
@@ -93,6 +91,6 @@ public abstract class BaseDAO {
      * @return {@code true} se o nome for seguro e válido
      */
     private boolean isSafeName(String name) {
-        return name != null && name.matches("[a-zA-Z0-9_]+");
+        return name != null && name.matches("^[a-zA-Z0-9_]+$");
     }
 }
