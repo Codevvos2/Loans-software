@@ -133,16 +133,22 @@ public class FerramentaDAO extends BaseDAO {
      * @return {@code true} se a exclusão for bem-sucedida
      */
     public boolean DeleteFerramentaBD(int idf) {
-        if (this.connection == null) return true;
+        if (this.connection == null) {
+            return false;
+        }
+
         String sql = "DELETE FROM tb_ferramenta WHERE idf = ?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, idf);
-            stmt.executeUpdate();
-            return true;
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            erro.printStackTrace();
+            return false;
         }
     }
+
 
     /**
      * Atualiza os dados de uma ferramenta existente no banco de dados.
@@ -151,7 +157,10 @@ public class FerramentaDAO extends BaseDAO {
      * @return {@code true} se a atualização for bem-sucedida
      */
     public boolean UpdateFerramentaBD(Ferramenta objeto) {
-        if (this.connection == null) return true;
+        if (this.connection == null) {
+            return false;
+        }
+
         String sql = "UPDATE tb_ferramenta SET nome = ?, marca = ?, valor = ?, setor = ?, estoque = ? WHERE idf = ?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setString(1, objeto.getNome());
@@ -160,12 +169,15 @@ public class FerramentaDAO extends BaseDAO {
             stmt.setString(4, objeto.getSetor());
             stmt.setInt(5, objeto.getEstoque());
             stmt.setInt(6, objeto.getIdf());
-            stmt.execute();
-            return true;
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            erro.printStackTrace();
+            return false;
         }
     }
+
 
     /**
      * Carrega uma ferramenta específica do banco de dados com base no ID.

@@ -139,16 +139,22 @@ public class ClienteDAO extends BaseDAO {
      * @throws RuntimeException Se ocorrer um erro durante a exclusão
      */
     public boolean DeleteClienteBD(int idc) {
-        if (this.connection == null) return true;
+        if (this.connection == null) {
+            return false;
+        }
+
         String sql = "DELETE FROM tb_cliente WHERE idc = ?";
+
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, idc);
-            stmt.executeUpdate();
-            return true;
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            System.err.println("Erro ao deletar cliente: " + erro.getMessage());
+            return false;
         }
     }
+
 
     /**
      * Atualiza os dados de um cliente existente no banco de dados.
@@ -158,7 +164,10 @@ public class ClienteDAO extends BaseDAO {
      * @throws RuntimeException Se ocorrer um erro durante a atualização
      */
     public boolean UpdateClienteBD(Cliente objeto) {
-        if (this.connection == null) return true;
+        if (this.connection == null) {
+            return false;
+        }
+
         String sql = "UPDATE tb_cliente SET nome=?, email=?, endereco=?, telefone=? WHERE idc=?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setString(1, objeto.getNome());
@@ -166,12 +175,14 @@ public class ClienteDAO extends BaseDAO {
             stmt.setString(3, objeto.getEndereco());
             stmt.setString(4, objeto.getTelefone());
             stmt.setInt(5, objeto.getIdc());
-            stmt.execute();
-            return true;
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException erro) {
             throw new RuntimeException(erro);
         }
     }
+
 
     /**
      * Carrega um cliente específico do banco de dados com base em seu ID.

@@ -127,8 +127,11 @@ public class EmprestimoDAO extends BaseDAO {
      * @throws RuntimeException Se ocorrer um erro durante a operação
      */
     public boolean InsertEmprestimoBD(Emprestimo objeto) {
-        if (this.connection == null) return true;
-        String sql = "INSERT INTO tb_emprestimo(ide,quantidade,dataloc,datadev,status,idc,idf) VALUES(?,?,?,?,?,?,?)";
+        if (this.connection == null) {
+            return false;
+        }
+
+        String sql = "INSERT INTO tb_emprestimo (ide, quantidade, dataloc, datadev, status, idc, idf) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, objeto.getIde());
             stmt.setInt(2, objeto.getQuantidade());
@@ -137,12 +140,15 @@ public class EmprestimoDAO extends BaseDAO {
             stmt.setString(5, objeto.getStatus());
             stmt.setInt(6, objeto.getIdc());
             stmt.setInt(7, objeto.getIdf());
-            stmt.execute();
-            return true;
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            erro.printStackTrace();
+            return false;
         }
     }
+
 
     /**
      * Exclui um empréstimo do banco de dados com base no ID informado.
@@ -152,16 +158,22 @@ public class EmprestimoDAO extends BaseDAO {
      * @throws RuntimeException Se ocorrer um erro durante a exclusão
      */
     public boolean DeleteEmprestimoBD(int ide) {
-        if (this.connection == null) return true;
+        if (this.connection == null) {
+            return false;
+        }
+
         String sql = "DELETE FROM tb_emprestimo WHERE ide = ?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, ide);
-            stmt.executeUpdate();
-            return true;
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            erro.printStackTrace();
+            return false;
         }
     }
+
 
     /**
      * Atualiza os dados de um empréstimo existente no banco de dados.
@@ -171,7 +183,10 @@ public class EmprestimoDAO extends BaseDAO {
      * @throws RuntimeException Se ocorrer um erro durante a atualização
      */
     public boolean UpdateEmprestimoBD(Emprestimo objeto) {
-        if (this.connection == null) return true;
+        if (this.connection == null) {
+            return false;
+        }
+
         String sql = "UPDATE tb_emprestimo SET quantidade=?, dataloc=?, datadev=?, status=?, idc=?, idf=? WHERE ide=?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setInt(1, objeto.getQuantidade());
@@ -181,12 +196,15 @@ public class EmprestimoDAO extends BaseDAO {
             stmt.setInt(5, objeto.getIdc());
             stmt.setInt(6, objeto.getIdf());
             stmt.setInt(7, objeto.getIde());
-            stmt.execute();
-            return true;
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro);
+            erro.printStackTrace();
+            return false;
         }
     }
+
 
     /**
      * Carrega um empréstimo específico do banco de dados com base em seu ID.
