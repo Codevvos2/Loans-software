@@ -4,6 +4,7 @@ import model.Ferramenta;
 import java.util.*;
 import java.sql.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Classe responsável pelo acesso e manipulação dos dados da entidade {@link Ferramenta}
@@ -32,6 +33,7 @@ public class FerramentaDAO extends BaseDAO {
             inicializaBanco();
         }
     }
+    private static final Logger LOGGER = Logger.getLogger(FerramentaDAO.class.getName());
 
     /**
      * Construtor utilizado em testes para injetar uma conexão específica.
@@ -173,7 +175,7 @@ public class FerramentaDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            erro.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erro ao atualizar ferramenta no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }
