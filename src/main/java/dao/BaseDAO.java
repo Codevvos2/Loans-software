@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.*;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Classe abstrata que fornece os métodos e estruturas básicas para acesso ao banco de dados.
@@ -66,9 +68,16 @@ public abstract class BaseDAO {
      * @throws SQLException se ocorrer erro durante a consulta
      * @throws IllegalArgumentException se o nome da tabela ou campo for inválido
      */
+
+    private static final Map<String, Set<String>> ALLOWED_IDENTIFIERS = Map.of(
+            "tb_emprestimo", Set.of("ide", "quantidade", "dataloc", "datadev", "status", "idc", "idf"),
+            "tb_ferramenta",  Set.of("idf", "nome", "marca", "valor", "setor", "estoque")
+    );
+
     public int maiorID(String tabela, String campoID) throws SQLException {
-        if (!isSafeName(tabela) || !isSafeName(campoID)) {
-            throw new IllegalArgumentException("Tabela ou campoID inválido");
+        Set<String> allowedCols = ALLOWED_IDENTIFIERS.get(tabela);
+        if (allowedCols == null || !allowedCols.contains(campoID)) {
+            throw new IllegalArgumentException("Tabela ou campoID não permitido");
         }
 
         String sql = "SELECT MAX(" + campoID + ") AS max_id FROM " + tabela;
@@ -81,6 +90,7 @@ public abstract class BaseDAO {
             return 0;
         }
     }
+
 
 
     /**
