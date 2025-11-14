@@ -3,6 +3,7 @@ package dao;
 import model.Emprestimo;
 import org.junit.jupiter.api.*;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,6 +17,13 @@ public class TestEmprestimoDAO {
     static EmprestimoDAO dao;
     static int novoId;
     static Connection testConn;
+
+    private void setConnectionNull(EmprestimoDAO dao) throws Exception {
+        Field field = EmprestimoDAO.class.getSuperclass().getDeclaredField("connection");
+        field.setAccessible(true);
+        field.set(dao, null);
+    }
+
 
     @BeforeAll
     static void setup() throws SQLException {
@@ -154,4 +162,81 @@ public class TestEmprestimoDAO {
         assertDoesNotThrow(() -> dao.inicializaBanco(),
                 "O método inicializaBanco() deve capturar SQLException e não lançar exceção");
     }
+
+    @Test
+    @Order(13)
+    void testInicializaBancoConnectionNull() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        setConnectionNull(dao);
+
+        assertDoesNotThrow(() -> dao.inicializaBanco());
+    }
+
+    @Test
+    @Order(14)
+    void testGetListaEmprestimoConnectionNull() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        setConnectionNull(dao);
+
+        ArrayList<Emprestimo> lista = dao.getListaEmprestimo();
+
+        assertNotNull(lista);
+        assertEquals(0, lista.size());
+    }
+
+    @Test
+    @Order(15)
+    void testInsertEmprestimoBDConnectionNull() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        setConnectionNull(dao);
+
+        Emprestimo e = new Emprestimo();
+
+        boolean resultado = dao.InsertEmprestimoBD(e);
+
+        assertFalse(resultado);
+    }
+
+    @Test
+    @Order(16)
+    void testDeleteEmprestimoBDConnectionNull() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        setConnectionNull(dao);
+
+        boolean resultado = dao.DeleteEmprestimoBD(1);
+
+        assertFalse(resultado);
+    }
+
+    @Test
+    @Order(17)
+    void testUpdateEmprestimoBDConnectionNull() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        setConnectionNull(dao);
+
+        Emprestimo e = new Emprestimo();
+
+        boolean resultado = dao.UpdateEmprestimoBD(e);
+
+        assertFalse(resultado);
+    }
+
+    @Test
+    @Order(18)
+    void testCarregaEmprestimoConnectionNull() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        setConnectionNull(dao);
+
+        Emprestimo e = dao.carregaEmprestimo(1);
+
+        assertNotNull(e);
+    }
+
+
 }
