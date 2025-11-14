@@ -2,7 +2,10 @@ package dao;
 
 import model.Cliente;
 import org.junit.jupiter.api.*;
+
+import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -132,5 +135,94 @@ public class TestClienteDAO {
                 "O método deve relançar RuntimeException quando ocorre SQLException");
     }
 
+    @Test
+    @Order(11)
+    void testConstrutorChamaInicializaBancoQuandoConexaoNaoEhNull() {
+        ClienteDAO dao = new ClienteDAO();
 
+        assertNotNull(dao.getConexao(), "Conexão não deveria ser null no construtor");
+
+        try (Statement st = dao.getConexao().createStatement()) {
+            st.executeQuery("SELECT 1 FROM tb_cliente LIMIT 1;");
+        } catch (SQLException e) {
+            fail("inicializaBanco() NÃO foi chamado pois tb_cliente não existe!");
+        }
+    }
+
+
+    @Test
+    @Order(12)
+    void testGetListaClienteConnectionNull() throws Exception {
+
+        ClienteDAO dao = new ClienteDAO();
+
+        Field field = dao.getClass().getSuperclass().getDeclaredField("connection");
+        field.setAccessible(true);
+        field.set(dao, null);
+
+        ArrayList<Cliente> lista = dao.getListaCliente();
+
+        assertNotNull(lista, "Lista não deve ser null quando connection é null");
+        assertEquals(0, lista.size(), "Lista deve estar vazia quando connection é null");
+    }
+
+
+
+    @Test
+    @Order(13)
+    void testInsertClienteBDConnectionNull() throws Exception {
+        ClienteDAO dao = new ClienteDAO();
+        dao.getConexao().close();
+
+        Cliente cli = new Cliente(1, "X", "x@x.com", "Rua", "999");
+
+        boolean resultado = dao.InsertClienteBD(cli);
+
+        assertFalse(resultado,
+                "Quando connection == null, InsertClienteBD deve retornar false");
+    }
+
+    @Test
+    @Order(14)
+    void testDeleteClienteBDConnectionNull() throws Exception {
+        ClienteDAO dao = new ClienteDAO();
+        dao.getConexao().close();
+
+        boolean resultado = dao.DeleteClienteBD(1);
+
+        assertFalse(resultado,
+                "Quando connection == null, DeleteClienteBD deve retornar false");
+    }
+
+    @Test
+    @Order(15)
+    void testUpdateClienteBDConnectionNull() throws Exception {
+
+        ClienteDAO dao = new ClienteDAO();
+
+        Field field = ClienteDAO.class.getSuperclass().getDeclaredField("connection");
+        field.setAccessible(true);
+
+        field.set(dao, null);
+
+        Cliente cli = new Cliente();
+
+        boolean resultado = dao.UpdateClienteBD(cli);
+
+        assertFalse(resultado);
+    }
+
+
+    @Test
+    @Order(16)
+    void testCarregaClienteConnectionNull() throws Exception {
+        ClienteDAO dao = new ClienteDAO();
+        dao.getConexao().close();
+
+        Cliente cli = dao.carregaCliente(1);
+
+        assertNotNull(cli);
+        assertEquals(0, cli.getIdc(),
+                "Quando connection == null, carregaCliente deve retornar objeto vazio");
+    }
 }
