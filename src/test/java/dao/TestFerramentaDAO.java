@@ -154,5 +154,58 @@ public class TestFerramentaDAO {
         Ferramenta f = dao.carregaFerramenta(123456);
         assertEquals(0, f.getIdf(), "ID de item inexistente deve ser 0");
     }
+    @Test
+    @Order(1)
+    void testInicializaBancoFerramenta_Catch() throws Exception {
+        FerramentaDAO daoErro = new FerramentaDAO();
+
+        daoErro.getConexao().close();
+
+        assertDoesNotThrow(() -> daoErro.inicializaBanco(),
+                "inicializaBanco() não deve lançar exceção mesmo com SQLException");
+    }
+
+    @Test
+    @Order(2)
+    void testDeleteFerramentaBD_Catch() throws Exception {
+        FerramentaDAO daoErro = new FerramentaDAO();
+
+        daoErro.getConexao().close();
+
+        boolean resultado = daoErro.DeleteFerramentaBD(1);
+
+        assertFalse(resultado,
+                "Quando ocorrer SQLException no delete, deve retornar false");
+    }
+
+    @Test
+    @Order(3)
+    void testUpdateFerramentaBD_Catch() throws Exception {
+        FerramentaDAO daoErro = new FerramentaDAO();
+
+        daoErro.getConexao().close();
+
+        Ferramenta f = new Ferramenta(1, "Teste", "Marca", 10.0, "Setor", 5);
+
+        boolean resultado = daoErro.UpdateFerramentaBD(f);
+
+        assertFalse(resultado,
+                "Quando ocorrer SQLException no update, deve retornar false");
+    }
+
+    @Test
+    @Order(4)
+    void testCarregaFerramenta_Catch() throws Exception {
+        FerramentaDAO daoErro = new FerramentaDAO();
+
+        daoErro.getConexao().close();
+
+        Ferramenta f = daoErro.carregaFerramenta(1);
+
+        assertNotNull(f, "O método deve retornar um objeto mesmo com SQLException");
+        assertEquals(0, f.getIdf(),
+                "Se ocorrer SQLException, o objeto deve vir com id 0 (padrão)");
+    }
+
 
 }
