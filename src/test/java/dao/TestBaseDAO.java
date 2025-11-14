@@ -3,6 +3,9 @@ package dao;
 import model.Ferramenta;
 import org.junit.jupiter.api.*;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +25,6 @@ public class TestBaseDAO {
     static void setup() throws Exception {
         dao = new BaseDAOFake();
 
-        // Acessa o método privado via reflection
         methodIsSafeName = BaseDAO.class.getDeclaredMethod("isSafeName", String.class);
         methodIsSafeName.setAccessible(true);
     }
@@ -95,5 +97,14 @@ public class TestBaseDAO {
                 "O método deve relançar RuntimeException quando ocorre SQLException");
     }
 
+    @Test
+    @Order(9)
+    void testMaiorIDIllegalArgument() throws Exception {
+        BaseDAO dao = new BaseDAO();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> dao.maiorID("tabela_invalida", "campo_invalido"),
+                "Deve lançar IllegalArgumentException quando tabela ou campoID são inválidos");
+    }
 
 }

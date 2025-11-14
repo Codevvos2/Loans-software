@@ -16,7 +16,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-public abstract class BaseDAO {
+public class BaseDAO {
 
     /** Conexão ativa com o banco de dados SQLite. */
     protected Connection connection;
