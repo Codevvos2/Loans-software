@@ -65,5 +65,58 @@ public class TestClienteDAO {
         assertNull(clienteBanco.getNome(), "Cliente não foi removido corretamente");
     }
 
+    @Test
+    @Order(6)
+    void testInsertClienteBD_Catch() throws Exception {
+        ClienteDAO daoErro = new ClienteDAO();
+
+        daoErro.getConexao().close();
+
+        Cliente cliente = new Cliente(1, "Teste", "teste@teste.com", "Rua X", "9999-9999");
+
+        boolean resultado = daoErro.InsertClienteBD(cliente);
+
+        assertFalse(resultado,
+                "Quando ocorrer SQLException, InsertClienteBD deve retornar false");
+    }
+
+    @Test
+    @Order(7)
+    void testGetListaCliente_Catch() throws Exception {
+        ClienteDAO daoErro = new ClienteDAO();
+
+        daoErro.getConexao().close();
+
+        ArrayList<Cliente> lista = daoErro.getListaCliente();
+
+        assertTrue(lista.isEmpty(),
+                "Quando ocorrer SQLException em getListaCliente(), deve retornar lista vazia");
+    }
+
+    @Test
+    @Order(8)
+    void testCarregaCliente_Catch() throws Exception {
+        ClienteDAO daoErro = new ClienteDAO();
+
+        daoErro.getConexao().close();
+
+        Cliente cliente = daoErro.carregaCliente(1);
+
+        assertNotNull(cliente, "O método deve retornar um objeto Cliente, mesmo em erro");
+        assertEquals(0, cliente.getIdc(),
+                "Em caso de SQLException, o cliente deve vir com id 0 (objeto padrão)");
+    }
+
+    @Test
+    @Order(9)
+    void testInicializaBanco_Catch() throws Exception {
+        ClienteDAO daoErro = new ClienteDAO();
+
+        daoErro.getConexao().close();
+
+        assertDoesNotThrow(() -> daoErro.inicializaBanco(),
+                "inicializaBanco() não deve lançar exceção mesmo com SQLException");
+    }
+
 
 }
