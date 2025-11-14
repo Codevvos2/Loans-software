@@ -207,5 +207,18 @@ public class TestFerramentaDAO {
                 "Se ocorrer SQLException, o objeto deve vir com id 0 (padrão)");
     }
 
+    @Test
+    @Order(5)
+    void testGetListaFerramentaCatch() throws Exception {
+        FerramentaDAO dao = new FerramentaDAO();
+
+        dao.getConexao().close();
+
+        ArrayList<Ferramenta> lista = dao.getListaFerramenta();
+
+        assertTrue(lista.isEmpty(),
+                "Quando ocorre SQLException, o método deve capturar e retornar a lista vazia");
+    }
+
 
 }

@@ -144,4 +144,14 @@ public class TestEmprestimoDAO {
         assertNotNull(dao.connection, "A conexão não deve ser nula");
         assertSame(testConn, dao.connection, "A conexão passada no construtor deve ser usada pelo DAO");
     }
+    @Test
+    @Order(12)
+    void testInicializaBancoCatch() throws Exception {
+        EmprestimoDAO dao = new EmprestimoDAO();
+
+        dao.getConexao().close();
+
+        assertDoesNotThrow(() -> dao.inicializaBanco(),
+                "O método inicializaBanco() deve capturar SQLException e não lançar exceção");
+    }
 }

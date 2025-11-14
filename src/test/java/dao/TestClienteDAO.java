@@ -118,5 +118,19 @@ public class TestClienteDAO {
                 "inicializaBanco() não deve lançar exceção mesmo com SQLException");
     }
 
+    @Test
+    @Order(10)
+    void testUpdateClienteBDCatch() throws Exception {
+        ClienteDAO dao = new ClienteDAO();
+
+        dao.getConexao().close();
+
+        Cliente cli = new Cliente(1, "Teste", "t@t.com", "Rua X", "9999");
+
+        assertThrows(RuntimeException.class,
+                () -> dao.UpdateClienteBD(cli),
+                "O método deve relançar RuntimeException quando ocorre SQLException");
+    }
+
 
 }

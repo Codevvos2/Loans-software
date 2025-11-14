@@ -1,5 +1,6 @@
 package dao;
 
+import model.Ferramenta;
 import org.junit.jupiter.api.*;
 import java.lang.reflect.Method;
 
@@ -77,5 +78,22 @@ public class TestBaseDAO {
 
         assertFalse(resultado, "Em caso de SQLException o método deve retornar false");
     }
+
+    @Test
+    @Order(8)
+    void testInsertFerramentaBDCatch() throws Exception {
+
+        FerramentaDAO dao = new FerramentaDAO();
+
+        dao.getConexao().close();
+
+        Ferramenta ferramenta =
+                new Ferramenta(0, "Furadeira", "Bosch", 199.99, "Eletrica", 10);
+
+        assertThrows(RuntimeException.class,
+                () -> dao.InsertFerramentaBD(ferramenta),
+                "O método deve relançar RuntimeException quando ocorre SQLException");
+    }
+
 
 }
