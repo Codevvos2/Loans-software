@@ -3,6 +3,7 @@ package model;
 import dao.ClienteDAO;
 import dao.Database;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -90,5 +91,25 @@ class TestCliente {
     void testMaiorID() throws SQLException {
         int id = cliente.maiorID();
         assertTrue(id >= 0);
+    }
+
+    @Test
+    @Order(1)
+    void testClienteConstrutorEnderecoTelefone() {
+        Cliente c = new Cliente("Rua Teste", "9999-9999");
+
+        assertEquals("Rua Teste", c.getEndereco(), "Endereço deve ser atribuído corretamente");
+        assertEquals("9999-9999", c.getTelefone(), "Telefone deve ser atribuído corretamente");
+    }
+
+    @Test
+    @Order(2)
+    void testClienteCarregaClienteSempreRetornaNull() {
+        Cliente cliente = new Cliente("Rua Teste", "9999-9999");
+
+        Cliente resultado = cliente.carregaCliente(1);
+
+        assertNull(resultado,
+                "O método carregaCliente do model Cliente sempre deve retornar null");
     }
 }
