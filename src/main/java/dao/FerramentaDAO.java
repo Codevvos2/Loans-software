@@ -33,7 +33,6 @@ public class FerramentaDAO extends BaseDAO {
             inicializaBanco();
         }
     }
-    private static final Logger LOGGER = Logger.getLogger(FerramentaDAO.class.getName());
 
     /**
      * Construtor utilizado em testes para injetar uma conexão específica.
@@ -146,7 +145,7 @@ public class FerramentaDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            LOGGER.log(Level.SEVERE, "Erro ao deletar ferramenta no banco de dados: {0}", erro.getMessage());
+            logger.log(Level.SEVERE, "Erro ao deletar ferramenta no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }
@@ -175,7 +174,7 @@ public class FerramentaDAO extends BaseDAO {
             int linhasAfetadas = stmt.executeUpdate();
             return linhasAfetadas > 0;
         } catch (SQLException erro) {
-            LOGGER.log(Level.SEVERE, "Erro ao atualizar ferramenta no banco de dados: {0}", erro.getMessage());
+            logger.log(Level.SEVERE, "Erro ao atualizar ferramenta no banco de dados: {0}", erro.getMessage());
             return false;
         }
     }
