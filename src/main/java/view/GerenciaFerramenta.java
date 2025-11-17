@@ -2,9 +2,9 @@ package view;
 
 import model.Ferramenta;
 
-import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 public class GerenciaFerramenta extends javax.swing.JFrame {
 

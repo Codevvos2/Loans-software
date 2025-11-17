@@ -1,8 +1,8 @@
 package model;
 
-import java.util.*;
 import dao.EmprestimoDAO;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Representa um empréstimo de ferramenta, herdando os atributos genéricos de {@link EmprestimoAbstract}.

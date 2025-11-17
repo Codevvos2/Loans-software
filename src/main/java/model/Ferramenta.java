@@ -1,9 +1,9 @@
 package model;
 
-import java.util.*;
 import dao.FerramentaDAO;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  * Representa uma ferramenta cadastrada no sistema.

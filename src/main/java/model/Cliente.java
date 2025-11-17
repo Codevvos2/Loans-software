@@ -1,8 +1,8 @@
 package model;
 
-import java.util.*;
 import dao.ClienteDAO;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Representa um cliente do sistema, herdando atributos básicos de {@link Pessoa}

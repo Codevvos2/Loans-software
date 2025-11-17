@@ -1,8 +1,11 @@
 package dao;
 
 import model.Cliente;
-import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Order;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.sql.Statement;

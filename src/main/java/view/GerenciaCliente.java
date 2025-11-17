@@ -1,9 +1,9 @@
 package view;
 
 import model.Cliente;
-import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 public class GerenciaCliente extends javax.swing.JFrame {
 
